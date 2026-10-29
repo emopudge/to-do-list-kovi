@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --paper: #faf8f3;
+  --grid: #e8e2d5;
+  --text: #2d2a26;
+  --text-muted: #7a746b;
+
+  --q1: #e85d5d;
+  --q2: #5db075;
+  --q3: #e8b84b;
+  --q4: #9aa5b1;
+
+  --font-hand: 'Caveat', cursive;
+  --font-body: 'Inter', system-ui, sans-serif;
+
+  --shadow: 2px 4px 12px rgba(45, 42, 38, 0.12);
+  --radius: 4px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  font-family: var(--font-body);
+  color: var(--text);
+  background-color: var(--paper);
+
+  /* клетка тетрадки через градиенты, без картинки */
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-attachment: fixed;
+}
