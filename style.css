@@ -39,3 +39,178 @@ body {
   background-size: 24px 24px;
   background-attachment: fixed;
 }
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 16px;
+  gap: 24px;
+}
+
+.header,
+.main,
+.toasts {
+  width: 100%;
+  max-width: 720px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header__title {
+  font-family: var(--font-hand);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.header__subtitle {
+  color: var(--text-muted);
+  font-size: 15px;
+}
+
+.header__stats {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.task-form {
+  display: grid;
+  grid-template-columns: 1fr 160px 160px auto;
+  gap: 8px;
+  padding: 16px;
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.task-form__input,
+.task-form__date,
+.task-form__quadrant,
+.controls__search,
+.controls__select {
+  font-family: inherit;
+  font-size: 15px;
+  padding: 8px 12px;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid #e0dbd0;
+  border-radius: var(--radius);
+}
+
+.task-form__submit {
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 8px 20px;
+  color: #fff;
+  background: var(--text);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr 180px 140px;
+  gap: 8px;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 100px;
+}
+
+.toasts {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 320px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.toasts > * {
+  pointer-events: auto;
+}
+
+@media (max-width: 640px) {
+  .task-form,
+  .controls {
+    grid-template-columns: 1fr;
+  }
+
+  .header__title {
+    font-size: 36px;
+  }
+}
+
+.header__title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.header__legend {
+  max-width: 280px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-muted);
+  text-align: right;
+  margin-top: 8px;
+}
+
+.header__link {
+  color: var(--q1);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--q1);
+}
+
+.header__link:hover {
+  color: var(--text);
+  border-bottom-color: var(--text);
+}
+
+/* красная линия на полях, как в тетрадке */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 48px;
+  width: 2px;
+  background: rgba(232, 93, 93, 0.2);
+  pointer-events: none;
+}
+
+@media (max-width: 640px) {
+  body::before {
+    left: 24px;
+  }
+  
+  .header__title-row {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .header__legend {
+    text-align: left;
+  }
+}
