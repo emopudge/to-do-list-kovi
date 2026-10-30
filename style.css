@@ -187,7 +187,64 @@ body {
   color: var(--text);
   border-bottom-color: var(--text);
 }
+.task-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
 
+.task-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-card__checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--q2); /* цвет галочки */
+}
+
+.task-card__btn {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 4px 8px;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.task-card__btn:hover {
+  background: #fff;
+  border-color: #e0dbd0;
+  color: var(--text);
+}
+
+.task-card__btn--delete:hover {
+  color: var(--q1);
+  border-color: var(--q1);
+}
+
+/* визуал для выполненных задач */
+.task-card--done {
+  opacity: 0.55;
+  background: #fff;
+  border-left-color: #ccc;
+}
+
+.task-card--done .task-card__title {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.task-card--done .task-card__badge {
+  background: #ccc;
+}
 /* красная линия на полях, как в тетрадке */
 body::before {
   content: '';
@@ -266,4 +323,63 @@ body::before {
   background: var(--q-color);
   padding: 2px 8px;
   border-radius: 4px;
+}
+
+.task-card__footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.task-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-card__checkbox {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: var(--q2); /* цвет галочки */
+}
+
+.task-card__btn {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 4px 8px;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.task-card__btn:hover {
+  background: #fff;
+  border-color: #e0dbd0;
+  color: var(--text);
+}
+
+.task-card__btn--delete:hover {
+  color: var(--q1);
+  border-color: var(--q1);
+}
+
+/* визуал для выполненных задач */
+.task-card--done {
+  opacity: 0.55;
+  background: #fff;
+  border-left-color: #ccc;
+}
+
+.task-card--done .task-card__title {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.task-card--done .task-card__badge {
+  background: #ccc;
 }

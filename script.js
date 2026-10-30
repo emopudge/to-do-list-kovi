@@ -169,6 +169,11 @@ function createTaskCard(task) {
   const card = document.createElement('article');
   card.className = `task-card task-card--${task.quadrant}`;
   card.dataset.id = task.id;
+  
+  // если задача выполнена, добавляем модификатор
+  if (task.done) {
+    card.classList.add('task-card--done');
+  }
 
   const header = document.createElement('div');
   header.className = 'task-card__header';
@@ -187,12 +192,76 @@ function createTaskCard(task) {
 
   header.append(title, date);
 
+  const footer = document.createElement('div');
+  footer.className = 'task-card__footer';
+
   const badge = document.createElement('span');
   badge.className = 'task-card__badge';
   badge.textContent = task.quadrant.toUpperCase();
 
-  card.append(header, badge);
+  const actions = document.createElement('div');
+  actions.className = 'task-card__actions';
+
+  const doneBtn = document.createElement('input');
+  doneBtn.type = 'checkbox';
+  doneBtn.className = 'task-card__checkbox';
+  doneBtn.checked = task.done;
+  doneBtn.title = 'отметить выполненной';
+
+  const editBtn = document.createElement('button');
+  editBtn.className = 'task-card__btn task-card__btn--edit';
+  editBtn.textContent = '✏️';
+  editBtn.title = 'редактировать';
+
+  const deleteBtn = document.createElement('button');
+  deleteBtn.className = 'task-card__btn task-card__btn--delete';
+  deleteBtn.textContent = '✕';
+  deleteBtn.title = 'удалить';
+
+  actions.append(doneBtn, editBtn, deleteBtn);
+  footer.append(badge, actions);
+  card.append(header, footer);
+  
   return card;
+}
+
+function toggleTask(id) {
+  const task = tasks.find(function (t) {
+    return t.id === id;
+  });
+  if (task) {
+    task.done = !task.done;
+    saveTasks();
+    renderTasks();
+  }
+}
+
+function deleteTask(id) {
+  tasks = tasks.filter(function (t) {
+    return t.id !== id;
+  });
+  saveTasks();
+  renderTasks();
+}
+
+function editTask(id) {
+  const task = tasks.find(function (t) {
+    return t.id === id;
+  });
+  if (!task) return;
+
+  // запрашиваем новые данные через нативные окна браузера
+  const newTitle = prompt('новое название задачи:', task.title);
+  if (newTitle === null) return; // если нажали отмену
+  
+  const newDate = prompt('новая дата (ГГГГ-ММ-ДД):', task.date);
+  if (newDate === null) return;
+
+  if (newTitle.trim()) task.title = newTitle.trim();
+  if (newDate.trim()) task.date = newDate.trim();
+
+  saveTasks();
+  renderTasks();
 }
 
 function renderTasks() {
@@ -214,6 +283,7 @@ function handleFormSubmit(event) {
     title: form.elements.title.value.trim(),
     date: form.elements.date.value,
     quadrant: form.elements.quadrant.value,
+    done: false,
   };
 
   tasks.push(newTask);
@@ -233,7 +303,22 @@ function init() {
 
   document.getElementById('task-form').addEventListener('submit', handleFormSubmit);
   
+  // делегируем клики по задачам на контейнер
+  const list = document.getElementById('task-list');
+  list.addEventListener('click', function (event) {
+    const card = event.target.closest('.task-card');
+    if (!card) return;
+    const id = card.dataset.id;
+
+    if (event.target.classList.contains('task-card__checkbox')) {
+      toggleTask(id);
+    } else if (event.target.classList.contains('task-card__btn--delete')) {
+      deleteTask(id);
+    } else if (event.target.classList.contains('task-card__btn--edit')) {
+      editTask(id);
+    }
+  });
+
   renderTasks();
 }
-
 init();
