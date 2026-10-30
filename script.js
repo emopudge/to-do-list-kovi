@@ -199,7 +199,13 @@ function createControls() {
   viewToggle.textContent = 'вид: список';
   viewToggle.title = 'переключить на матрицу';
 
-  controls.append(search, dateFilter, filter, sort, viewToggle);
+  const importBtn = document.createElement('button');
+  importBtn.type = 'button';
+  importBtn.id = 'import-btn';
+  importBtn.className = 'controls__toggle'; 
+  importBtn.textContent = 'умный импорт';
+
+  controls.append(search, dateFilter, filter, sort, viewToggle, importBtn);
   return controls;
 }
 
@@ -440,6 +446,22 @@ function renderTasks() {
   }
 }
 
+function guessQuadrant(title) {
+  const text = title.toLowerCase();
+
+  // используем корни слов, чтобы ловить любые формы
+  const q1Roots = ['лр', 'дз', 'дедлайн', 'сда', 'экзамен', 'сесс', 'налог', 'оплат', 'защит'];
+  const q2Roots = ['позвон', 'мам', 'пап', 'спорт', 'зуб', 'врач', 'книг', 'учеб', 'развит'];
+  const q3Roots = ['ответ', 'чат', 'куп', 'быт', 'убра', 'встреч', 'забер', 'отнес'];
+  
+  // проверяем, есть ли в тексте хотя бы один из корней
+  if (q1Roots.some(root => text.includes(root))) return 'q1';
+  if (q2Roots.some(root => text.includes(root))) return 'q2';
+  if (q3Roots.some(root => text.includes(root))) return 'q3';
+  
+  return 'q4'; // по умолчанию, если ничего не подошло
+}
+
 function handleFormSubmit(event) {
   event.preventDefault();
   const form = event.target;
@@ -500,7 +522,30 @@ function init() {
   document.getElementById('task-list').addEventListener('click', handleTaskClick);
   document.getElementById('matrix-board').addEventListener('click', handleTaskClick);
 
-  renderTasks();
+    document.getElementById('import-btn').addEventListener('click', function() {
+    const text = prompt('вставь задачи (каждую с новой строки):');
+    if (!text) return;
+
+    const lines = text.split('\n').filter(line => line.trim() !== '');
+    
+    lines.forEach(function(line) {
+      const title = line.trim();
+      const quadrant = guessQuadrant(title);
+      
+      const newTask = {
+        id: Date.now().toString() + Math.random().toString(36).substring(2, 5), // уникальный id
+        title: title,
+        date: new Date().toISOString().split('T')[0], // ставим сегодняшнюю дату
+        quadrant: quadrant,
+        done: false,
+      };
+      
+      tasks.push(newTask);
+    });
+
+    saveTasks();
+    renderTasks();
+  });
 }
 
 init();
