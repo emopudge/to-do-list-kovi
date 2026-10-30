@@ -152,12 +152,88 @@ function createToastContainer() {
   return container;
 }
 
+let tasks = [];
+
+function loadTasks() {
+  const saved = localStorage.getItem('kovi-tasks');
+  if (saved) {
+    tasks = JSON.parse(saved);
+  }
+}
+
+function saveTasks() {
+  localStorage.setItem('kovi-tasks', JSON.stringify(tasks));
+}
+
+function createTaskCard(task) {
+  const card = document.createElement('article');
+  card.className = `task-card task-card--${task.quadrant}`;
+  card.dataset.id = task.id;
+
+  const header = document.createElement('div');
+  header.className = 'task-card__header';
+
+  const title = document.createElement('h3');
+  title.className = 'task-card__title';
+  title.textContent = task.title;
+
+  const date = document.createElement('time');
+  date.className = 'task-card__date';
+  date.dateTime = task.date;
+  date.textContent = new Date(task.date).toLocaleDateString('ru-RU', {
+    day: 'numeric',
+    month: 'short',
+  });
+
+  header.append(title, date);
+
+  const badge = document.createElement('span');
+  badge.className = 'task-card__badge';
+  badge.textContent = task.quadrant.toUpperCase();
+
+  card.append(header, badge);
+  return card;
+}
+
+function renderTasks() {
+  const list = document.getElementById('task-list');
+  list.textContent = '';
+
+  tasks.forEach(function (task) {
+    const card = createTaskCard(task);
+    list.appendChild(card);
+  });
+}
+
+function handleFormSubmit(event) {
+  event.preventDefault();
+  const form = event.target;
+
+  const newTask = {
+    id: Date.now().toString(),
+    title: form.elements.title.value.trim(),
+    date: form.elements.date.value,
+    quadrant: form.elements.quadrant.value,
+  };
+
+  tasks.push(newTask);
+  saveTasks();
+  renderTasks();
+  form.reset();
+}
+
 function init() {
+  loadTasks();
+
   const main = document.createElement('main');
   main.className = 'main';
   main.append(createForm(), createControls(), createTaskList());
 
   document.body.append(createHeader(), main, createToastContainer());
+
+  document.getElementById('task-form').addEventListener('submit', handleFormSubmit);
+  
+  renderTasks();
 }
 
 init();
