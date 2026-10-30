@@ -537,3 +537,39 @@ body::before {
   font-style: italic;
   margin-top: 2px;
 }
+
+.matrix-legend__toggle {
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px dashed #d5cec1;
+  border-radius: var(--radius);
+  padding: 8px 12px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.matrix-legend__toggle:hover {
+  background: #fff;
+  color: var(--text);
+  border-style: solid;
+}
+
+/* визуальная иерархия: Q3 и Q4 бледнее */
+.task-card--q3,
+.task-card--q4 {
+  opacity: 0.75;
+}
+
+.task-card--q3:hover,
+.task-card--q4:hover {
+  opacity: 1; /* при наведении становятся яркими */
+}
+
+/* важные задачи выделяем тенью посильнее */
+.task-card--q1 {
+  box-shadow: 2px 4px 16px rgba(232, 93, 93, 0.2);
+}

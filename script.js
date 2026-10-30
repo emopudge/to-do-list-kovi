@@ -48,8 +48,21 @@ function createMatrixLegend() {
   const section = document.createElement('section');
   section.className = 'matrix-legend';
 
+  const toggleBtn = document.createElement('button');
+  toggleBtn.type = 'button';
+  toggleBtn.className = 'matrix-legend__toggle';
+  toggleBtn.textContent = 'как это работает? (нажми)';
+  
   const grid = document.createElement('div');
   grid.className = 'matrix-legend__grid';
+  grid.style.display = 'none'; // по умолчанию скрыта
+
+  // логика раскрытия
+  toggleBtn.addEventListener('click', function () {
+    const isHidden = grid.style.display === 'none';
+    grid.style.display = isHidden ? 'grid' : 'none';
+    toggleBtn.textContent = isHidden ? 'скрыть объяснение' : 'как это работает? (нажми)';
+  });
 
   const items = [
     { q: 'q1', title: '🔥 Горит', desc: 'срочно и важно', ex: 'сдать лабу, оплатить налоги' },
@@ -78,7 +91,7 @@ function createMatrixLegend() {
     grid.appendChild(block);
   });
 
-  section.appendChild(grid);
+  section.append(toggleBtn, grid);
   return section;
 }
 
@@ -167,6 +180,7 @@ function createControls() {
   sort.className = 'controls__select';
 
   const sortOptions = [
+    { value: 'priority', text: 'по важности' },
     { value: 'date-asc', text: 'дата ↑' },
     { value: 'date-desc', text: 'дата ↓' },
   ];
@@ -392,6 +406,10 @@ function renderTasks() {
   // сортировка
   const sortVal = document.getElementById('sort').value;
   filtered.sort(function (a, b) {
+    if (sortVal === 'priority') {
+      // сортируем по названию квадранта: q1, q2, q3, q4
+      return a.quadrant.localeCompare(b.quadrant);
+    }
     if (sortVal === 'date-asc') return new Date(a.date) - new Date(b.date);
     return new Date(b.date) - new Date(a.date);
   });
