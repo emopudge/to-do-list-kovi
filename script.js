@@ -200,25 +200,46 @@ function createMatrixBoard() {
   const board = document.createElement('div');
   board.className = 'matrix-board';
   board.id = 'matrix-board';
-  board.style.display = 'none'; // по умолчанию скрыта
+  board.style.display = 'none';
+
+  const quadrantsInfo = {
+    q1: { title: '🔥 Горит', desc: 'срочно и важно', ex: 'сдать лабу, оплатить налоги' },
+    q2: { title: '🌱 Растёт', desc: 'важно, но не срочно', ex: 'позвонить маме, спорт' },
+    q3: { title: '📞 Суета', desc: 'срочно, но неважно', ex: 'ответить в чате, быт' },
+    q4: { title: '🍿 Пустота', desc: 'неважно и несрочно', ex: 'тикток, полистать ленту' },
+  };
 
   const quadrants = ['q1', 'q2', 'q3', 'q4'];
+  
   quadrants.forEach(function (q) {
     const col = document.createElement('div');
     col.className = `matrix-col matrix-col--${q}`;
     col.dataset.quadrant = q;
 
-    const header = document.createElement('h3');
-    header.className = 'matrix-col__title';
-    header.textContent = q.toUpperCase();
+    const info = quadrantsInfo[q];
 
+    const header = document.createElement('div');
+    header.className = 'matrix-col__header';
+
+    const title = document.createElement('h3');
+    title.className = 'matrix-col__title';
+    title.textContent = info.title;
+
+    const desc = document.createElement('p');
+    desc.className = 'matrix-col__desc';
+    desc.textContent = info.desc;
+
+    const ex = document.createElement('p');
+    ex.className = 'matrix-col__ex';
+    ex.textContent = info.ex;
+
+    header.append(title, desc, ex);
     col.appendChild(header);
     board.appendChild(col);
   });
 
   return board;
 }
-
 
 function createToastContainer() {
   const container = document.createElement('div');
@@ -375,8 +396,10 @@ function renderTasks() {
     return new Date(b.date) - new Date(a.date);
   });
 
-  // отрисовка
+    const legend = document.querySelector('.matrix-legend');
+
   if (currentView === 'list') {
+    legend.style.display = 'grid'; // показываем легенду в списке
     list.style.display = 'flex';
     board.style.display = 'none';
     
@@ -384,13 +407,13 @@ function renderTasks() {
       list.appendChild(createTaskCard(task));
     });
   } else {
+    legend.style.display = 'none'; // скрываем легенду в матрице
     list.style.display = 'none';
     board.style.display = 'grid';
 
     filtered.forEach(function (task) {
       const col = board.querySelector(`[data-quadrant="${task.quadrant}"]`);
       if (col) {
-        // в матрице задачи выглядят чуть компактнее
         const card = createTaskCard(task);
         card.classList.add('task-card--compact');
         col.appendChild(card);

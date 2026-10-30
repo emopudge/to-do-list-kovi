@@ -510,3 +510,30 @@ body::before {
     grid-template-columns: 1fr;
   }
 }
+
+.matrix-col__header {
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #d5cec1;
+}
+
+.matrix-col__title {
+  font-family: var(--font-hand);
+  font-size: 24px;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.matrix-col__desc {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.matrix-col__ex {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-top: 2px;
+}
