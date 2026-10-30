@@ -383,3 +383,130 @@ body::before {
 .task-card--done .task-card__badge {
   background: #ccc;
 }
+
+.controls {
+  grid-template-columns: 1fr 140px 120px 120px 140px; /* обновили колонки */
+}
+
+.controls__date,
+.controls__toggle {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 8px 12px;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid #e0dbd0;
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.controls__toggle {
+  font-weight: 600;
+  background: var(--text);
+  color: #fff;
+  border: none;
+}
+
+/* сетка матрицы задач */
+.matrix-board {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  min-height: 200px;
+}
+
+.matrix-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px dashed #d5cec1;
+  border-radius: var(--radius);
+  min-height: 120px;
+}
+
+.matrix-col--q1 { border-color: rgba(232, 93, 93, 0.4); background: rgba(232, 93, 93, 0.05); }
+.matrix-col--q2 { border-color: rgba(93, 176, 117, 0.4); background: rgba(93, 176, 117, 0.05); }
+.matrix-col--q3 { border-color: rgba(232, 184, 75, 0.4); background: rgba(232, 184, 75, 0.05); }
+.matrix-col--q4 { border-color: rgba(154, 165, 177, 0.4); background: rgba(154, 165, 177, 0.05); }
+
+.matrix-col__title {
+  font-family: var(--font-hand);
+  font-size: 24px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+/* компактные карточки для матрицы */
+.task-card--compact {
+  padding: 10px;
+}
+
+.task-card--compact .task-card__title {
+  font-size: 14px;
+}
+
+.task-card--compact .task-card__badge {
+  display: none; /* в матрице бейдж не нужен, там и так видно колонку */
+}
+
+@media (max-width: 800px) {
+  .controls {
+    grid-template-columns: 1fr 1fr;
+  }
+  .matrix-board {
+    grid-template-columns: 1fr;
+  }
+}
+
+.matrix-legend {
+  margin-bottom: 8px;
+}
+
+.matrix-legend__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.matrix-legend__block {
+  padding: 10px 14px;
+  background: #fff;
+  border: 1px dashed #d5cec1;
+  border-radius: var(--radius);
+  box-shadow: 1px 2px 6px rgba(45, 42, 38, 0.05);
+}
+
+.matrix-legend__block--q1 { border-left: 4px solid var(--q1); }
+.matrix-legend__block--q2 { border-left: 4px solid var(--q2); }
+.matrix-legend__block--q3 { border-left: 4px solid var(--q3); }
+.matrix-legend__block--q4 { border-left: 4px solid var(--q4); }
+
+.matrix-legend__title {
+  font-family: var(--font-hand);
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.matrix-legend__desc {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-top: 2px;
+}
+
+.matrix-legend__ex {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 2px;
+  font-style: italic;
+}
+
+@media (max-width: 640px) {
+  .matrix-legend__grid {
+    grid-template-columns: 1fr;
+  }
+}

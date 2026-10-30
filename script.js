@@ -44,6 +44,44 @@ function createHeader() {
   return header;
 }
 
+function createMatrixLegend() {
+  const section = document.createElement('section');
+  section.className = 'matrix-legend';
+
+  const grid = document.createElement('div');
+  grid.className = 'matrix-legend__grid';
+
+  const items = [
+    { q: 'q1', title: '🔥 Горит', desc: 'срочно и важно', ex: 'сдать лабу, оплатить налоги' },
+    { q: 'q2', title: '🌱 Растёт', desc: 'важно, но не срочно', ex: 'позвонить маме, спорт' },
+    { q: 'q3', title: '📞 Суета', desc: 'срочно, но неважно', ex: 'ответить в чате, быт' },
+    { q: 'q4', title: '🍿 Пустота', desc: 'неважно и несрочно', ex: 'тикток, полистать ленту' },
+  ];
+
+  items.forEach(function (item) {
+    const block = document.createElement('div');
+    block.className = `matrix-legend__block matrix-legend__block--${item.q}`;
+
+    const title = document.createElement('h3');
+    title.className = 'matrix-legend__title';
+    title.textContent = item.title;
+
+    const desc = document.createElement('p');
+    desc.className = 'matrix-legend__desc';
+    desc.textContent = item.desc;
+
+    const ex = document.createElement('p');
+    ex.className = 'matrix-legend__ex';
+    ex.textContent = item.ex;
+
+    block.append(title, desc, ex);
+    grid.appendChild(block);
+  });
+
+  section.appendChild(grid);
+  return section;
+}
+
 function createForm() {
   const form = document.createElement('form');
   form.className = 'task-form';
@@ -101,6 +139,12 @@ function createControls() {
   search.placeholder = 'поиск по названию';
   search.className = 'controls__search';
 
+  const dateFilter = document.createElement('input');
+  dateFilter.type = 'date';
+  dateFilter.id = 'date-filter';
+  dateFilter.className = 'controls__date';
+  dateFilter.title = 'показать задачи на конкретный день';
+
   const filter = document.createElement('select');
   filter.id = 'filter';
   filter.className = 'controls__select';
@@ -134,7 +178,14 @@ function createControls() {
     sort.appendChild(option);
   });
 
-  controls.append(search, filter, sort);
+  const viewToggle = document.createElement('button');
+  viewToggle.type = 'button';
+  viewToggle.id = 'view-toggle';
+  viewToggle.className = 'controls__toggle';
+  viewToggle.textContent = 'вид: список';
+  viewToggle.title = 'переключить на матрицу';
+
+  controls.append(search, dateFilter, filter, sort, viewToggle);
   return controls;
 }
 
@@ -145,6 +196,30 @@ function createTaskList() {
   return list;
 }
 
+function createMatrixBoard() {
+  const board = document.createElement('div');
+  board.className = 'matrix-board';
+  board.id = 'matrix-board';
+  board.style.display = 'none'; // по умолчанию скрыта
+
+  const quadrants = ['q1', 'q2', 'q3', 'q4'];
+  quadrants.forEach(function (q) {
+    const col = document.createElement('div');
+    col.className = `matrix-col matrix-col--${q}`;
+    col.dataset.quadrant = q;
+
+    const header = document.createElement('h3');
+    header.className = 'matrix-col__title';
+    header.textContent = q.toUpperCase();
+
+    col.appendChild(header);
+    board.appendChild(col);
+  });
+
+  return board;
+}
+
+
 function createToastContainer() {
   const container = document.createElement('div');
   container.className = 'toasts';
@@ -153,6 +228,8 @@ function createToastContainer() {
 }
 
 let tasks = [];
+let currentView = 'list'; // 'list' или 'matrix'
+let currentDateFilter = '';
 
 function loadTasks() {
   const saved = localStorage.getItem('kovi-tasks');
@@ -266,12 +343,60 @@ function editTask(id) {
 
 function renderTasks() {
   const list = document.getElementById('task-list');
+  const board = document.getElementById('matrix-board');
+  
   list.textContent = '';
+  board.querySelectorAll('.task-card').forEach(el => el.remove());
 
-  tasks.forEach(function (task) {
-    const card = createTaskCard(task);
-    list.appendChild(card);
+  // применяем фильтры
+  let filtered = tasks;
+  
+  const searchQuery = document.getElementById('search').value.trim().toLowerCase();
+  if (searchQuery) {
+    filtered = filtered.filter(t => t.title.toLowerCase().includes(searchQuery));
+  }
+
+  const statusFilter = document.getElementById('filter').value;
+  if (statusFilter === 'active') {
+    filtered = filtered.filter(t => !t.done);
+  } else if (statusFilter === 'done') {
+    filtered = filtered.filter(t => t.done);
+  }
+
+  const dateFilter = document.getElementById('date-filter').value;
+  if (dateFilter) {
+    filtered = filtered.filter(t => t.date === dateFilter);
+  }
+
+  // сортировка
+  const sortVal = document.getElementById('sort').value;
+  filtered.sort(function (a, b) {
+    if (sortVal === 'date-asc') return new Date(a.date) - new Date(b.date);
+    return new Date(b.date) - new Date(a.date);
   });
+
+  // отрисовка
+  if (currentView === 'list') {
+    list.style.display = 'flex';
+    board.style.display = 'none';
+    
+    filtered.forEach(function (task) {
+      list.appendChild(createTaskCard(task));
+    });
+  } else {
+    list.style.display = 'none';
+    board.style.display = 'grid';
+
+    filtered.forEach(function (task) {
+      const col = board.querySelector(`[data-quadrant="${task.quadrant}"]`);
+      if (col) {
+        // в матрице задачи выглядят чуть компактнее
+        const card = createTaskCard(task);
+        card.classList.add('task-card--compact');
+        col.appendChild(card);
+      }
+    });
+  }
 }
 
 function handleFormSubmit(event) {
@@ -292,33 +417,49 @@ function handleFormSubmit(event) {
   form.reset();
 }
 
+function handleTaskClick(event) {
+  const card = event.target.closest('.task-card');
+  if (!card) return;
+  const id = card.dataset.id;
+
+  if (event.target.classList.contains('task-card__checkbox')) {
+    toggleTask(id);
+  } else if (event.target.classList.contains('task-card__btn--delete')) {
+    deleteTask(id);
+  } else if (event.target.classList.contains('task-card__btn--edit')) {
+    editTask(id);
+  }
+}
+
 function init() {
   loadTasks();
 
   const main = document.createElement('main');
   main.className = 'main';
-  main.append(createForm(), createControls(), createTaskList());
+  main.append(createMatrixLegend(), createForm(), createControls(), createTaskList(), createMatrixBoard());
 
   document.body.append(createHeader(), main, createToastContainer());
 
   document.getElementById('task-form').addEventListener('submit', handleFormSubmit);
   
-  // делегируем клики по задачам на контейнер
-  const list = document.getElementById('task-list');
-  list.addEventListener('click', function (event) {
-    const card = event.target.closest('.task-card');
-    if (!card) return;
-    const id = card.dataset.id;
+  // обработчики фильтров
+  document.getElementById('search').addEventListener('input', renderTasks);
+  document.getElementById('filter').addEventListener('change', renderTasks);
+  document.getElementById('sort').addEventListener('change', renderTasks);
+  document.getElementById('date-filter').addEventListener('change', renderTasks);
 
-    if (event.target.classList.contains('task-card__checkbox')) {
-      toggleTask(id);
-    } else if (event.target.classList.contains('task-card__btn--delete')) {
-      deleteTask(id);
-    } else if (event.target.classList.contains('task-card__btn--edit')) {
-      editTask(id);
-    }
+  // переключение вида
+  document.getElementById('view-toggle').addEventListener('click', function(event) {
+    currentView = currentView === 'list' ? 'matrix' : 'list';
+    event.target.textContent = currentView === 'list' ? 'вид: список' : 'вид: матрица';
+    renderTasks();
   });
+
+  // делегирование кликов
+  document.getElementById('task-list').addEventListener('click', handleTaskClick);
+  document.getElementById('matrix-board').addEventListener('click', handleTaskClick);
 
   renderTasks();
 }
+
 init();
