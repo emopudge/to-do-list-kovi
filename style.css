@@ -115,10 +115,22 @@ body {
   border: 1px solid #e0dbd0;
   border-radius: var(--radius);
 }
-.controls__search,
-.controls__select {
+.controls__search {
+  flex: 2 1 200px; 
   font-family: inherit;
-  font-size: 15px;
+  font-size: 14px;
+  padding: 8px 12px;
+  color: var(--text);
+  background: #fff;
+  border: 1px solid #e0dbd0;
+  border-radius: var(--radius);
+  min-width: 0;
+}
+
+.controls__select {
+  flex: 1 1 120px;
+  font-family: inherit;
+  font-size: 14px;
   padding: 8px 12px;
   color: var(--text);
   background: #fff;
@@ -154,9 +166,11 @@ body {
 }
 
 .controls {
-  display: grid;
-  grid-template-columns: 1fr 180px 140px;
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
+  width: 100%;
+  opacity: 0.85;
 }
 
 .task-list {
@@ -422,21 +436,30 @@ body::before {
 
 .controls__date,
 .controls__toggle {
+  flex: 0 0 auto;
   font-family: inherit;
   font-size: 14px;
-  padding: 8px 12px;
-  color: var(--text);
-  background: #fff;
-  border: 1px solid #e0dbd0;
+  font-weight: 600;
+  padding: 8px 16px;
+  color: #fff;
+  background: var(--text);
+  border: none;
   border-radius: var(--radius);
   cursor: pointer;
+  transition: background 0.2s;
 }
 
-.controls__toggle {
-  font-weight: 600;
-  background: var(--text);
-  color: #fff;
-  border: none;
+.controls__toggle:hover {
+  background: #4a4640;
+}
+
+@media (max-width: 640px) {
+  .controls__search,
+  .controls__date,
+  .controls__select,
+  .controls__toggle {
+    flex: 1 1 100%;
+  }
 }
 
 /* сетка матрицы задач */
