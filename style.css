@@ -638,7 +638,7 @@ body::before {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(45, 42, 38, 0.5);
+  background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(4px); /* эффект стекла */
   display: flex;
   align-items: center;
@@ -647,12 +647,12 @@ body::before {
 }
 
 .modal {
-  background: var(--bg-paper);
+  background: #ffffff;
   width: 90%;
   max-width: 480px;
   padding: 24px;
   border-radius: var(--radius);
-  box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3);
   border: 1px solid #d5cec1;
 }
 
@@ -661,11 +661,12 @@ body::before {
   font-size: 32px;
   line-height: 1;
   margin-bottom: 8px;
+  color: var(--text-main);
 }
 
 .modal__hint {
   font-size: 13px;
-  color: var(--text-muted);
+  color: #5a554d;
   margin-bottom: 16px;
 }
 
@@ -678,14 +679,19 @@ body::before {
   border: 1px solid #e0dbd0;
   border-radius: var(--radius);
   resize: vertical;
-  background: #fff;
+  background: var(--bg-paper);
   margin-bottom: 16px;
+  color: var(--text-main); 
 }
 
 .modal__actions {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+}
+
+.modal__textarea::placeholder {
+  color: #a9a298;
 }
 
 .modal__btn {
@@ -699,11 +705,12 @@ body::before {
 
 .modal__btn--cancel {
   background: transparent;
-  color: var(--text-muted);
+    color: #5a554d;
+  font-weight: 500;
 }
 
 .modal__btn--cancel:hover {
-  color: var(--text-main);
+  color: var(--q1);
 }
 
 .modal__btn--submit {
