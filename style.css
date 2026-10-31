@@ -86,18 +86,34 @@ body {
 }
 
 .task-form {
-  display: grid;
-  grid-template-columns: 1fr 160px 160px auto;
+  display: flex;
+  flex-wrap: wrap; /* позволяет переносить элементы на новую строку */
   gap: 8px;
-  padding: 16px;
-  background: #fff;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  width: 100%;
 }
 
-.task-form__input,
+.task-form__input {
+  flex: 1 1 200px; /* занимает всё свободное место, минимум 200px */
+  font-family: inherit;
+  font-size: 15px;
+  padding: 10px 14px;
+  color: var(--text);
+  background: var(--bg-paper);
+  border: 1px solid #e0dbd0;
+  border-radius: var(--radius);
+}
+
 .task-form__date,
-.task-form__quadrant,
+.task-form__quadrant {
+  flex: 0 1 140px; /* не растягиваются, но могут сжиматься */
+  font-family: inherit;
+  font-size: 15px;
+  padding: 10px 14px;
+  color: var(--text);
+  background: var(--bg-paper);
+  border: 1px solid #e0dbd0;
+  border-radius: var(--radius);
+}
 .controls__search,
 .controls__select {
   font-family: inherit;
@@ -110,15 +126,30 @@ body {
 }
 
 .task-form__submit {
+  flex: 0 0 auto; /* кнопка сохраняет свой размер по контенту */
   font-family: inherit;
   font-size: 15px;
   font-weight: 600;
-  padding: 8px 20px;
+  padding: 10px 24px;
   color: #fff;
   background: var(--text);
   border: none;
   border-radius: var(--radius);
   cursor: pointer;
+  transition: background 0.2s;
+}
+
+.task-form__submit:hover {
+  background: #4a4640; /* чуть светлее при наведении */
+}
+
+@media (max-width: 640px) {
+  .task-form__input,
+  .task-form__date,
+  .task-form__quadrant,
+  .task-form__submit {
+    flex: 1 1 100%;
+  }
 }
 
 .controls {
@@ -594,7 +625,7 @@ body::before {
 /* Блок добавления задачи */
 .add-section {
   background: #fff;
-  padding: 16px 20px;
+  padding: 20px 24px;
   border-radius: var(--radius);
   box-shadow: 0 4px 20px rgba(45, 42, 38, 0.08);
   border-top: 4px solid var(--text-main);
@@ -605,7 +636,7 @@ body::before {
   font-family: var(--font-hand);
   font-size: 28px;
   font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   color: var(--text-main);
 }
 
