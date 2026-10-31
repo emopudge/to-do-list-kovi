@@ -87,13 +87,14 @@ body {
 
 .task-form {
   display: flex;
-  flex-wrap: wrap; /* позволяет переносить элементы на новую строку */
+  flex-wrap: wrap; 
+  justify-content: center;
   gap: 8px;
   width: 100%;
 }
 
 .task-form__input {
-  flex: 1 1 200px; /* занимает всё свободное место, минимум 200px */
+  flex: 2 1 200px; 
   font-family: inherit;
   font-size: 15px;
   padding: 10px 14px;
@@ -105,7 +106,7 @@ body {
 
 .task-form__date,
 .task-form__quadrant {
-  flex: 0 1 140px; /* не растягиваются, но могут сжиматься */
+  flex: 1 1 140px; 
   font-family: inherit;
   font-size: 15px;
   padding: 10px 14px;
@@ -126,7 +127,7 @@ body {
 }
 
 .task-form__submit {
-  flex: 0 0 auto; /* кнопка сохраняет свой размер по контенту */
+  flex: 0 0 100%;
   font-family: inherit;
   font-size: 15px;
   font-weight: 600;
