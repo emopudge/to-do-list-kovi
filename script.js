@@ -287,6 +287,7 @@ function createTaskCard(task) {
   const card = document.createElement('article');
   card.className = `task-card task-card--${task.quadrant}`;
   card.dataset.id = task.id;
+  card.draggable = true; 
   
   // если задача выполнена, добавляем модификатор
   if (task.done) {
@@ -449,9 +450,14 @@ function renderTasks() {
 function guessQuadrant(title) {
   const text = title.toLowerCase();
 
+  if (text.includes('q1') || text.includes('1 квадрант') || text.includes('срочно важно')) return 'q1';
+  if (text.includes('q2') || text.includes('2 квадрант') || text.includes('важно несрочно')) return 'q2';
+  if (text.includes('q3') || text.includes('3 квадрант') || text.includes('срочно неважно')) return 'q3';
+  if (text.includes('q4') || text.includes('4 квадрант') || text.includes('неважно несрочно')) return 'q4';
+
   // используем корни слов, чтобы ловить любые формы
   const q1Roots = ['лр', 'дз', 'дедлайн', 'сда', 'экзамен', 'сесс', 'налог', 'оплат', 'защит'];
-  const q2Roots = ['позвон', 'мам', 'пап', 'спорт', 'зуб', 'врач', 'книг', 'учеб', 'развит'];
+  const q2Roots = ['звон', 'мам', 'пап', 'спорт', 'зуб', 'врач', 'книг', 'учеб', 'развит'];
   const q3Roots = ['ответ', 'чат', 'куп', 'быт', 'убра', 'встреч', 'забер', 'отнес'];
   
   // проверяем, есть ли в тексте хотя бы один из корней
@@ -546,6 +552,71 @@ function init() {
     saveTasks();
     renderTasks();
   });
+
+  function initDragAndDrop() {
+    let draggedTaskId = null;
+
+    document.addEventListener('dragstart', function (event) {
+      const card = event.target.closest('.task-card');
+      if (!card) return;
+
+      draggedTaskId = card.dataset.id;
+      card.classList.add('dragging');
+      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.setData('text/plain', draggedTaskId);
+    });
+
+    document.addEventListener('dragend', function (event) {
+      const card = event.target.closest('.task-card');
+      if (card) card.classList.remove('dragging');
+
+      document.querySelectorAll('.matrix-col').forEach(function (col) {
+        col.classList.remove('drag-over');
+      });
+
+      draggedTaskId = null;
+    });
+
+    const board = document.getElementById('matrix-board');
+    if (!board) return;
+
+    board.addEventListener('dragover', function (event) {
+      const col = event.target.closest('.matrix-col');
+      if (!col) return;
+
+      event.preventDefault();
+      event.dataTransfer.dropEffect = 'move';
+
+      document.querySelectorAll('.matrix-col').forEach(function (c) {
+        c.classList.remove('drag-over');
+      });
+      col.classList.add('drag-over');
+    });
+
+    board.addEventListener('drop', function (event) {
+      const col = event.target.closest('.matrix-col');
+      if (!col || !draggedTaskId) return;
+
+      event.preventDefault();
+
+      const newQuadrant = col.dataset.quadrant;
+      const task = tasks.find(function (t) {
+        return t.id === draggedTaskId;
+      });
+
+      if (task && task.quadrant !== newQuadrant) {
+        task.quadrant = newQuadrant;
+        saveTasks();
+        renderTasks();
+      }
+
+      col.classList.remove('drag-over');
+      draggedTaskId = null;
+    });
+  }
+
+  renderTasks();
+  initDragAndDrop();
 }
 
 init();
