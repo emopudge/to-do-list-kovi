@@ -96,6 +96,13 @@ function createMatrixLegend() {
 }
 
 function createForm() {
+  const section = document.createElement('section');
+  section.className = 'add-section';
+
+  const heading = document.createElement('h2');
+  heading.className = 'add-section__heading';
+  heading.textContent = 'новая запись';
+
   const form = document.createElement('form');
   form.className = 'task-form';
   form.id = 'task-form';
@@ -119,10 +126,10 @@ function createForm() {
   quadrantSelect.className = 'task-form__quadrant';
 
   const quadrantOptions = [
-    { value: 'q1', text: 'Q1 — горит', title: 'срочно и важно: сдать лабу, оплатить коммуналку' },
-    { value: 'q2', text: 'Q2 — растёт', title: 'важно, но не срочно: позвонить маме, записаться к зубному' },
-    { value: 'q3', text: 'Q3 — суета', title: 'срочно, но неважно: ответить в чате, бытовая мелочь' },
-    { value: 'q4', text: 'Q4 — пустота', title: 'неважно и несрочно: посмотреть тикток, полистать ленту' },
+    { value: 'q1', text: 'Q1 — горит', title: 'срочно и важно' },
+    { value: 'q2', text: 'Q2 — растёт', title: 'важно, но не срочно' },
+    { value: 'q3', text: 'Q3 — суета', title: 'срочно, но неважно' },
+    { value: 'q4', text: 'Q4 — пустота', title: 'неважно и несрочно' },
   ];
 
   quadrantOptions.forEach(function (item) {
@@ -139,7 +146,15 @@ function createForm() {
   submit.textContent = 'добавить';
 
   form.append(titleInput, dateInput, quadrantSelect, submit);
-  return form;
+
+  const importBtn = document.createElement('button');
+  importBtn.type = 'button';
+  importBtn.id = 'import-btn';
+  importBtn.className = 'add-section__import-btn';
+  importBtn.textContent = 'умный импорт списком';
+
+  section.append(heading, form, importBtn);
+  return section;
 }
 
 function createControls() {
@@ -205,7 +220,7 @@ function createControls() {
   importBtn.className = 'controls__toggle'; 
   importBtn.textContent = 'умный импорт';
 
-  controls.append(search, dateFilter, filter, sort, viewToggle, importBtn);
+  controls.append(search, dateFilter, filter, sort, viewToggle);
   return controls;
 }
 
@@ -458,7 +473,7 @@ function guessQuadrant(title) {
   // используем корни слов, чтобы ловить любые формы
   const q1Roots = ['лр', 'дз', 'дедлайн', 'сда', 'экзамен', 'сесс', 'налог', 'оплат', 'защит'];
   const q2Roots = ['звон', 'мам', 'пап', 'спорт', 'зуб', 'врач', 'книг', 'учеб', 'развит'];
-  const q3Roots = ['ответ', 'чат', 'куп', 'быт', 'убра', 'встреч', 'забер', 'отнес'];
+  const q3Roots = ['ответ', 'чат', 'куп', 'быт', 'убра', 'готов', 'встреч', 'забер', 'отнес'];
   
   // проверяем, есть ли в тексте хотя бы один из корней
   if (q1Roots.some(root => text.includes(root))) return 'q1';
@@ -500,6 +515,45 @@ function handleTaskClick(event) {
   }
 }
 
+function createImportModal() {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'import-modal';
+  overlay.style.display = 'none'; // скрыто по умолчанию
+
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+
+  const title = document.createElement('h2');
+  title.className = 'modal__title';
+  title.textContent = 'умный импорт';
+
+  const hint = document.createElement('p');
+  hint.className = 'modal__hint';
+  hint.textContent = 'вставь задачи, каждую с новой строки. я сама раскидаю их по квадрантам!';
+
+  const textarea = document.createElement('textarea');
+  textarea.className = 'modal__textarea';
+  textarea.id = 'import-textarea';
+  textarea.placeholder = 'сдать лабу завтра\nпозвонить маме\nкупить хлеб';
+
+  const actions = document.createElement('div');
+  actions.className = 'modal__actions';
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.className = 'modal__btn modal__btn--cancel';
+  cancelBtn.textContent = 'отмена';
+
+  const submitBtn = document.createElement('button');
+  submitBtn.className = 'modal__btn modal__btn--submit';
+  submitBtn.textContent = 'распределить';
+
+  actions.append(cancelBtn, submitBtn);
+  modal.append(title, hint, textarea, actions);
+  overlay.appendChild(modal);
+  return overlay;
+}
+
 function init() {
   loadTasks();
 
@@ -507,7 +561,7 @@ function init() {
   main.className = 'main';
   main.append(createMatrixLegend(), createForm(), createControls(), createTaskList(), createMatrixBoard());
 
-  document.body.append(createHeader(), main, createToastContainer());
+  document.body.append(createHeader(), main, createToastContainer(), createImportModal());
 
   document.getElementById('task-form').addEventListener('submit', handleFormSubmit);
   
@@ -528,30 +582,6 @@ function init() {
   document.getElementById('task-list').addEventListener('click', handleTaskClick);
   document.getElementById('matrix-board').addEventListener('click', handleTaskClick);
 
-    document.getElementById('import-btn').addEventListener('click', function() {
-    const text = prompt('вставь задачи (каждую с новой строки):');
-    if (!text) return;
-
-    const lines = text.split('\n').filter(line => line.trim() !== '');
-    
-    lines.forEach(function(line) {
-      const title = line.trim();
-      const quadrant = guessQuadrant(title);
-      
-      const newTask = {
-        id: Date.now().toString() + Math.random().toString(36).substring(2, 5), // уникальный id
-        title: title,
-        date: new Date().toISOString().split('T')[0], // ставим сегодняшнюю дату
-        quadrant: quadrant,
-        done: false,
-      };
-      
-      tasks.push(newTask);
-    });
-
-    saveTasks();
-    renderTasks();
-  });
 
   function initDragAndDrop() {
     let draggedTaskId = null;
@@ -613,6 +643,59 @@ function init() {
       col.classList.remove('drag-over');
       draggedTaskId = null;
     });
+
+  const modal = document.getElementById('import-modal');
+  const importBtn = document.getElementById('import-btn');
+  const cancelBtn = modal.querySelector('.modal__btn--cancel');
+  const submitBtn = modal.querySelector('.modal__btn--submit');
+  const textarea = document.getElementById('import-textarea');
+
+  importBtn.addEventListener('click', function () {
+    modal.style.display = 'flex';
+    textarea.focus();
+  });
+
+  cancelBtn.addEventListener('click', function () {
+    modal.style.display = 'none';
+    textarea.value = '';
+  });
+
+  // закрытие по клику на темный фон
+  modal.addEventListener('click', function (e) {
+    if (e.target === modal) {
+      modal.style.display = 'none';
+      textarea.value = '';
+    }
+  });
+
+  submitBtn.addEventListener('click', function () {
+    const text = textarea.value;
+    if (!text.trim()) return;
+
+    const lines = text.split('\n').filter(line => line.trim() !== '');
+    
+    lines.forEach(function(line) {
+      const title = line.trim();
+      const quadrant = guessQuadrant(title);
+      
+      const newTask = {
+        id: Date.now().toString() + Math.random().toString(36).substring(2, 5),
+        title: title,
+        date: new Date().toISOString().split('T')[0],
+        quadrant: quadrant,
+        done: false,
+      };
+      
+      tasks.push(newTask);
+    });
+
+    saveTasks();
+    renderTasks();
+    
+    modal.style.display = 'none';
+    textarea.value = '';
+  });
+
   }
 
   renderTasks();
