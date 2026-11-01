@@ -343,23 +343,30 @@ function createTaskCard(task) {
   const actions = document.createElement('div');
   actions.className = 'task-card__actions';
 
+  const checkboxWrapper = document.createElement('label');
+  checkboxWrapper.className = 'task-card__checkbox-wrapper has-tooltip';
+  checkboxWrapper.dataset.tooltip = 'выполнено';
+
   const doneBtn = document.createElement('input');
   doneBtn.type = 'checkbox';
   doneBtn.className = 'task-card__checkbox';
   doneBtn.checked = task.done;
   doneBtn.setAttribute('aria-label', 'отметить выполненной');
+  checkboxWrapper.appendChild(doneBtn);
 
   const editBtn = document.createElement('button');
-  editBtn.className = 'task-card__btn task-card__btn--edit';
+  editBtn.className = 'task-card__btn task-card__btn--edit has-tooltip';
   editBtn.textContent = '✏️';
   editBtn.setAttribute('aria-label', 'редактировать');
+  editBtn.dataset.tooltip = 'редактировать';
 
   const deleteBtn = document.createElement('button');
-  deleteBtn.className = 'task-card__btn task-card__btn--delete';
+  deleteBtn.className = 'task-card__btn task-card__btn--delete has-tooltip';
   deleteBtn.textContent = '✕';
   deleteBtn.setAttribute('aria-label', 'удалить');
+  deleteBtn.dataset.tooltip = 'удалить';
 
-  actions.append(doneBtn, editBtn, deleteBtn);
+  actions.append(checkboxWrapper, editBtn, deleteBtn);
   footer.append(badge, actions);
   card.append(header, footer);
   
@@ -490,9 +497,9 @@ function guessQuadrant(title) {
   if (text.includes('q4') || text.includes('4 квадрант') || text.includes('неважно несрочно')) return 'q4';
 
   // используем корни слов, чтобы ловить любые формы
-  const q1Roots = ['лр', 'дз', 'дедлайн', 'сда', 'экзамен', 'сесс', 'налог', 'оплат', 'защит'];
+  const q1Roots = ['лр', 'учи', 'дз', 'дедлайн', 'сда', 'экзамен', 'сесс', 'налог', 'оплат', 'защит'];
   const q2Roots = ['звон', 'мам', 'пап', 'спорт', 'зуб', 'врач', 'книг', 'учеб', 'развит'];
-  const q3Roots = ['ответ', 'чат', 'куп', 'быт', 'убра', 'готов', 'встреч', 'забер', 'отнес'];
+  const q3Roots = ['ответ', 'чат', 'пис', 'куп', 'быт', 'убра', 'готов', 'встреч', 'забер', 'отнес'];
   
   // проверяем, есть ли в тексте хотя бы один из корней
   if (q1Roots.some(root => text.includes(root))) return 'q1';
@@ -525,7 +532,7 @@ function handleTaskClick(event) {
   if (!card) return;
   const id = card.dataset.id;
 
-  if (event.target.classList.contains('task-card__checkbox')) {
+  if (event.target.closest('.task-card__checkbox-wrapper')) {
     toggleTask(id);
   } else if (event.target.classList.contains('task-card__btn--delete')) {
     deleteTask(id);

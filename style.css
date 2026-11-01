@@ -835,3 +835,81 @@ body::before {
 .modal__btn--submit:hover {
   background: #4a9c61;
 }
+
+/* Тултипы */
+.has-tooltip {
+  position: relative;
+  display: inline-flex; /* Чтобы тултип центрировался относительно иконки/чекбокса, а не всей карточки */
+}
+
+/* Общие стили для облачка и стрелки */
+.has-tooltip::after,
+.has-tooltip::before {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, transform 0.2s;
+  pointer-events: none;
+  z-index: 20;
+}
+
+/* Само облачко с текстом */
+.has-tooltip::after {
+  content: attr(data-tooltip);
+  background: #333; /* Жесткий фон, чтобы текст не сливался */
+  background: var(--text-main, #333); /* Используем переменную, но если ее нет — будет темно-серый */
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  font-family: var(--font-body, sans-serif);
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  margin-bottom: 6px; /* Отступ, чтобы стрелка не наезжала на текст */
+}
+
+/* Стрелка (треугольник) */
+.has-tooltip::before {
+  content: '';
+  width: 0;
+  height: 0;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+  border-top-color: var(--text-main, #333);
+  margin-bottom: 2px; /* Прижимаем стрелку к облачку */
+}
+
+/* Показ при наведении */
+.has-tooltip:hover::after,
+.has-tooltip:hover::before {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Корректировка для крайней правой кнопки (крестика) */
+.task-card__btn--delete.has-tooltip::after,
+.task-card__btn--delete.has-tooltip::before {
+  left: auto;
+  right: 0;
+  transform: translateY(4px);
+}
+
+.task-card__btn--delete.has-tooltip:hover::after,
+.task-card__btn--delete.has-tooltip:hover::before {
+  transform: translateY(0);
+}
+
+/* Обертка чекбокса */
+.task-card__checkbox-wrapper {
+  position: relative; /* Обязательно для позиционирования тултипа */
+  display: inline-flex; /* inline-flex лучше flex, чтобы обертка не растягивалась */
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  cursor: pointer;
+}
