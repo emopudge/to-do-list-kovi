@@ -120,6 +120,7 @@ function createForm() {
   dateInput.name = 'date';
   dateInput.required = true;
   dateInput.className = 'task-form__date';
+  dateInput.lang = 'ru-RU'; 
 
   const quadrantSelect = document.createElement('select');
   quadrantSelect.name = 'quadrant';
@@ -609,6 +610,7 @@ function createEditModal() {
   dateInput.id = 'edit-date';
   dateInput.className = 'modal__input';
   dateInput.required = true;
+  dateInput.lang = 'ru-RU'; 
 
   const actions = document.createElement('div');
   actions.className = 'modal__actions';
