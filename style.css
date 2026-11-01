@@ -261,7 +261,7 @@ body {
 .task-card__actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 25px;
 }
 
 .task-card__checkbox {
@@ -399,7 +399,7 @@ body::before {
 .task-card__actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 25px;
 }
 
 .task-card__checkbox {
@@ -516,6 +516,7 @@ body::before {
 /* компактные карточки для матрицы */
 .task-card--compact {
   padding: 10px;
+  border-left: 4px solid var(--q-color) !important;
 }
 
 .task-card--compact .task-card__title {
@@ -589,6 +590,18 @@ body::before {
   margin-bottom: 12px;
   padding-bottom: 8px;
   border-bottom: 1px dashed #d5cec1;
+  text-align: left; 
+}
+
+.matrix-col__empty {
+  font-size: 13px;
+  color: #b0a89b;
+  text-align: center;
+  padding: 20px 0;
+  border: 1px dashed #d5cec1;
+  border-radius: var(--radius);
+  margin-top: 8px;
+  font-style: italic;
 }
 
 .matrix-col__title {
@@ -663,6 +676,29 @@ body::before {
 
 .task-card {
   cursor: grab;
+  overflow-wrap: break-word;
+}
+
+.task-card:active {
+  cursor: grabbing;
+}
+
+.matrix-board .task-card::before {
+  content: '⋮⋮';
+  color: #c4bdb1;
+  margin-right: 8px;
+  font-size: 24px;
+  letter-spacing: -2px;
+  cursor: grab;
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.matrix-board .task-card {
+  position: relative;
+  padding-left: 24px; /* место под хвататель */
 }
 
 /* Блок добавления задачи */
@@ -684,22 +720,15 @@ body::before {
 }
 
 .add-section__import-btn {
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 600;
+  background: #f4fcf6; 
+  border: 1px solid var(--q2);
   color: var(--q2);
-  background: transparent;
-  border: 1px dashed var(--q2);
-  border-radius: var(--radius);
-  padding: 8px 16px;
-  margin-top: 12px;
-  cursor: pointer;
-  width: 100%;
-  transition: all 0.2s;
+  font-weight: 600;
 }
 
 .add-section__import-btn:hover {
-  background: rgba(93, 176, 117, 0.1);
+  background: var(--q2);
+  color: #fff;
 }
 
 .controls {

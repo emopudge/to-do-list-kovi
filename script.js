@@ -302,9 +302,8 @@ function createTaskCard(task) {
   const card = document.createElement('article');
   card.className = `task-card task-card--${task.quadrant}`;
   card.dataset.id = task.id;
-  card.draggable = true; 
-  
-  // если задача выполнена, добавляем модификатор
+  card.draggable = true;
+
   if (task.done) {
     card.classList.add('task-card--done');
   }
@@ -319,6 +318,7 @@ function createTaskCard(task) {
   const date = document.createElement('time');
   date.className = 'task-card__date';
   date.dateTime = task.date;
+  date.lang = 'ru-RU';
   date.textContent = new Date(task.date).toLocaleDateString('ru-RU', {
     day: 'numeric',
     month: 'short',
@@ -331,7 +331,14 @@ function createTaskCard(task) {
 
   const badge = document.createElement('span');
   badge.className = 'task-card__badge';
-  badge.textContent = task.quadrant.toUpperCase();
+  
+  const quadrantNames = {
+    q1: '🔥 Горит',
+    q2: '🌱 Растёт',
+    q3: '📞 Суета',
+    q4: '🍿 Пустота',
+  };
+  badge.textContent = quadrantNames[task.quadrant];
 
   const actions = document.createElement('div');
   actions.className = 'task-card__actions';
@@ -340,17 +347,17 @@ function createTaskCard(task) {
   doneBtn.type = 'checkbox';
   doneBtn.className = 'task-card__checkbox';
   doneBtn.checked = task.done;
-  doneBtn.title = 'отметить выполненной';
+  doneBtn.setAttribute('aria-label', 'отметить выполненной');
 
   const editBtn = document.createElement('button');
   editBtn.className = 'task-card__btn task-card__btn--edit';
   editBtn.textContent = '✏️';
-  editBtn.title = 'редактировать';
+  editBtn.setAttribute('aria-label', 'редактировать');
 
   const deleteBtn = document.createElement('button');
   deleteBtn.className = 'task-card__btn task-card__btn--delete';
   deleteBtn.textContent = '✕';
-  deleteBtn.title = 'удалить';
+  deleteBtn.setAttribute('aria-label', 'удалить');
 
   actions.append(doneBtn, editBtn, deleteBtn);
   footer.append(badge, actions);
@@ -405,7 +412,6 @@ function renderTasks() {
   list.textContent = '';
   board.querySelectorAll('.task-card').forEach(el => el.remove());
 
-  // применяем фильтры
   let filtered = tasks;
   
   const searchQuery = document.getElementById('search').value.trim().toLowerCase();
@@ -451,12 +457,25 @@ function renderTasks() {
     list.style.display = 'none';
     board.style.display = 'grid';
 
+    board.querySelectorAll('.matrix-col').forEach(col => {
+      col.querySelectorAll('.task-card, .matrix-col__empty').forEach(el => el.remove());
+    });
+
+
     filtered.forEach(function (task) {
       const col = board.querySelector(`[data-quadrant="${task.quadrant}"]`);
       if (col) {
         const card = createTaskCard(task);
         card.classList.add('task-card--compact');
         col.appendChild(card);
+      }
+    });
+    board.querySelectorAll('.matrix-col').forEach(col => {
+      if (!col.querySelector('.task-card')) {
+        const empty = document.createElement('p');
+        empty.className = 'matrix-col__empty';
+        empty.textContent = 'перетащи сюда задачу';
+        col.appendChild(empty);
       }
     });
   }
@@ -530,7 +549,7 @@ function createImportModal() {
 
   const hint = document.createElement('p');
   hint.className = 'modal__hint';
-  hint.textContent = 'вставь задачи, каждую с новой строки. я сама раскидаю их по квадрантам!';
+  hint.textContent = 'вставь задачи, каждую с новой строки. я сам раскидаю их по квадрантам!';
 
   const textarea = document.createElement('textarea');
   textarea.className = 'modal__textarea';
