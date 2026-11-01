@@ -44,6 +44,33 @@ function createHeader() {
   return header;
 }
 
+function updateStats() {
+  const statsContainer = document.getElementById('stats');
+  if (!statsContainer) return;
+  
+  statsContainer.textContent = '';
+
+  // считаем только активные задачи
+  const counts = { q1: 0, q2: 0, q3: 0, q4: 0 };
+  tasks.forEach(function (t) {
+    if (!t.done) counts[t.quadrant]++;
+  });
+
+  const quadrants = [
+    { id: 'q1', label: '🔥' },
+    { id: 'q2', label: '🌱' },
+    { id: 'q3', label: '📞' },
+    { id: 'q4', label: '🍿' },
+  ];
+
+  quadrants.forEach(function (q) {
+    const badge = document.createElement('span');
+    badge.className = `header__stat-badge header__stat-badge--${q.id}`;
+    badge.textContent = `${q.label} ${counts[q.id]}`;
+    statsContainer.appendChild(badge);
+  });
+}
+
 function createMatrixLegend() {
   const section = document.createElement('section');
   section.className = 'matrix-legend';
@@ -300,6 +327,60 @@ function saveTasks() {
   localStorage.setItem('kovi-tasks', JSON.stringify(tasks));
 }
 
+const q2Reminders = [
+  'полить цветы — 2 минуты, а сколько радости!',
+  'покормить питомца или просто погладить его.',
+  'написать родителям или близким — просто так, без повода.',
+  'размяться 5 минут? спина скажет спасибо.',
+  'выпить стакан воды и сделать глубокий вдох.',
+  'почитать книгу вместо бесконечной ленты?',
+  'записаться на профилактический осмотр к врачу.',
+  'выучить 5 новых слов на иностранном языке.'
+];
+let reminderIndex = 0;
+
+function showToast(text) {
+  const container = document.getElementById('toasts');
+  
+  // удаляем старый тост, чтобы не копились
+  if (container.firstChild) {
+    container.firstChild.remove();
+  }
+
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+
+  const msg = document.createElement('p');
+  msg.className = 'toast__text';
+  msg.textContent = text;
+
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'toast__close';
+  closeBtn.textContent = '✕';
+  closeBtn.setAttribute('aria-label', 'закрыть напоминание');
+
+  closeBtn.addEventListener('click', function () {
+    toast.remove();
+  });
+
+  toast.append(msg, closeBtn);
+  container.appendChild(toast);
+}
+
+function startReminders() {
+  // первый тост показываем через 10 секунд после загрузки страницы
+  setTimeout(function () {
+    showToast(q2Reminders[reminderIndex]);
+    reminderIndex++;
+  }, 10000);
+
+  // дальше показываем каждые 3 минуты (180000 миллисекунд)
+  setInterval(function () {
+    showToast(q2Reminders[reminderIndex]);
+    reminderIndex = (reminderIndex + 1) % q2Reminders.length;
+  }, 180000);
+}
+
 function createTaskCard(task) {
   const card = document.createElement('article');
   card.className = `task-card task-card--${task.quadrant}`;
@@ -486,6 +567,7 @@ function renderTasks() {
       }
     });
   }
+  updateStats();
 }
 
 function guessQuadrant(title) {
@@ -809,7 +891,7 @@ function init() {
       editingTaskId = null;
     }
   });
-
+  startReminders();
   renderTasks();
   initDragAndDrop();
 }
