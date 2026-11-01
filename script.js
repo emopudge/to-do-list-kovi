@@ -218,6 +218,8 @@ function createControls() {
     filter.appendChild(option);
   });
 
+  filter.value = 'active';
+
   const sort = document.createElement('select');
   sort.id = 'sort';
   sort.className = 'controls__select';
@@ -367,17 +369,29 @@ function showToast(text) {
   container.appendChild(toast);
 }
 
+let lastReminderIndex = -1;
+
+function getRandomReminder() {
+  let randomIndex = Math.floor(Math.random() * q2Reminders.length);
+  
+  // если выпал тот же тост, что и в прошлый раз, берем следующий по кругу
+  if (randomIndex === lastReminderIndex) {
+    randomIndex = (randomIndex + 1) % q2Reminders.length;
+  }
+  
+  lastReminderIndex = randomIndex;
+  return q2Reminders[randomIndex];
+}
+
 function startReminders() {
   // первый тост показываем через 10 секунд после загрузки страницы
   setTimeout(function () {
-    showToast(q2Reminders[reminderIndex]);
-    reminderIndex++;
+    showToast(getRandomReminder());
   }, 10000);
 
   // дальше показываем каждые 3 минуты (180000 миллисекунд)
   setInterval(function () {
-    showToast(q2Reminders[reminderIndex]);
-    reminderIndex = (reminderIndex + 1) % q2Reminders.length;
+    showToast(getRandomReminder());
   }, 180000);
 }
 
