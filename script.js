@@ -286,6 +286,7 @@ function createToastContainer() {
 let tasks = [];
 let currentView = 'list'; // 'list' или 'matrix'
 let currentDateFilter = '';
+let editingTaskId = null;
 
 function loadTasks() {
   const saved = localStorage.getItem('kovi-tasks');
@@ -393,23 +394,21 @@ function deleteTask(id) {
 }
 
 function editTask(id) {
-  const task = tasks.find(function (t) {
-    return t.id === id;
-  });
+  const task = tasks.find(t => t.id === id);
   if (!task) return;
 
-  // запрашиваем новые данные через нативные окна браузера
-  const newTitle = prompt('новое название задачи:', task.title);
-  if (newTitle === null) return; // если нажали отмену
+  editingTaskId = id;
   
-  const newDate = prompt('новая дата (ГГГГ-ММ-ДД):', task.date);
-  if (newDate === null) return;
+  const modal = document.getElementById('edit-modal');
+  const titleInput = document.getElementById('edit-title');
+  const dateInput = document.getElementById('edit-date');
 
-  if (newTitle.trim()) task.title = newTitle.trim();
-  if (newDate.trim()) task.date = newDate.trim();
+  // заполняем поля текущими данными
+  titleInput.value = task.title;
+  dateInput.value = task.date;
 
-  saveTasks();
-  renderTasks();
+  modal.style.display = 'flex';
+  titleInput.focus(); // ставим курсор в поле ввода
 }
 
 function renderTasks() {
@@ -580,6 +579,58 @@ function createImportModal() {
   return overlay;
 }
 
+function createEditModal() {
+  const overlay = document.createElement('div');
+  overlay.className = 'modal-overlay';
+  overlay.id = 'edit-modal';
+  overlay.style.display = 'none';
+
+  const modal = document.createElement('div');
+  modal.className = 'modal';
+
+  const title = document.createElement('h2');
+  title.className = 'modal__title';
+  title.textContent = 'редактировать';
+
+  const form = document.createElement('form');
+  form.id = 'edit-form';
+  form.className = 'modal__form';
+
+  const titleInput = document.createElement('input');
+  titleInput.type = 'text';
+  titleInput.id = 'edit-title';
+  titleInput.className = 'modal__input';
+  titleInput.required = true;
+  titleInput.maxLength = 120;
+  titleInput.placeholder = 'название задачи';
+
+  const dateInput = document.createElement('input');
+  dateInput.type = 'date';
+  dateInput.id = 'edit-date';
+  dateInput.className = 'modal__input';
+  dateInput.required = true;
+
+  const actions = document.createElement('div');
+  actions.className = 'modal__actions';
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.type = 'button';
+  cancelBtn.className = 'modal__btn modal__btn--cancel';
+  cancelBtn.textContent = 'отмена';
+
+  const saveBtn = document.createElement('button');
+  saveBtn.type = 'submit';
+  saveBtn.className = 'modal__btn modal__btn--submit';
+  saveBtn.textContent = 'сохранить';
+
+  actions.append(cancelBtn, saveBtn);
+  form.append(titleInput, dateInput, actions);
+  modal.append(title, form);
+  overlay.appendChild(modal);
+
+  return overlay;
+}
+
 function init() {
   loadTasks();
 
@@ -587,7 +638,7 @@ function init() {
   main.className = 'main';
   main.append(createMatrixLegend(), createForm(), createControls(), createTaskList(), createMatrixBoard());
 
-  document.body.append(createHeader(), main, createToastContainer(), createImportModal());
+  document.body.append(createHeader(), main, createToastContainer(), createImportModal(), createEditModal());
 
   document.getElementById('task-form').addEventListener('submit', handleFormSubmit);
   
@@ -723,6 +774,39 @@ function init() {
   });
 
   }
+
+    // логика модалки редактирования
+  const editModal = document.getElementById('edit-modal');
+  const editForm = document.getElementById('edit-form');
+  const editCancelBtn = editModal.querySelector('.modal__btn--cancel');
+
+  editForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!editingTaskId) return;
+
+    const task = tasks.find(t => t.id === editingTaskId);
+    if (task) {
+      task.title = document.getElementById('edit-title').value.trim();
+      task.date = document.getElementById('edit-date').value;
+      saveTasks();
+      renderTasks();
+    }
+
+    editModal.style.display = 'none';
+    editingTaskId = null;
+  });
+
+  editCancelBtn.addEventListener('click', function () {
+    editModal.style.display = 'none';
+    editingTaskId = null;
+  });
+
+  editModal.addEventListener('click', function (e) {
+    if (e.target === editModal) {
+      editModal.style.display = 'none';
+      editingTaskId = null;
+    }
+  });
 
   renderTasks();
   initDragAndDrop();

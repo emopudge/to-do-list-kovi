@@ -913,3 +913,28 @@ body::before {
   padding: 4px;
   cursor: pointer;
 }
+
+/* Форма внутри модалки */
+.modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal__input {
+  width: 100%;
+  font-family: inherit;
+  font-size: 15px;
+  padding: 10px 14px;
+  color: var(--text-main);
+  border: 1px solid #d5cec1;
+  border-radius: var(--radius);
+  background: var(--bg-paper);
+  transition: border-color 0.2s;
+}
+
+.modal__input:focus {
+  outline: none;
+  border-color: var(--q2);
+  box-shadow: 0 0 0 2px rgba(93, 176, 117, 0.2);
+}
