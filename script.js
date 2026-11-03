@@ -369,6 +369,10 @@ function showToast(text) {
   closeBtn.textContent = "✕";
   closeBtn.setAttribute("aria-label", "закрыть напоминание");
 
+  const timeoutId = setTimeout(function () {
+    toast.remove();
+  }, 5000); // автоскрытие через 5 секунд
+
   closeBtn.addEventListener("click", function () {
     clearTimeout(timeoutId);
     toast.remove();
@@ -376,12 +380,10 @@ function showToast(text) {
 
   toast.append(msg, closeBtn);
   container.appendChild(toast);
-  const timeoutId = setTimeout(function () {
-    toast.remove();
-  }, 5000); // 5000 мс = 5 секунд
 }
 
 function getRandomReminder() {
+  if (q2Reminders.length === 0) return "";
   let randomIndex = Math.floor(Math.random() * q2Reminders.length);
 
   // если выпал тот же тост, что и в прошлый раз, берем следующий по кругу
@@ -504,12 +506,11 @@ function editTask(id) {
   const titleInput = document.getElementById("edit-title");
   const dateInput = document.getElementById("edit-date");
 
-  // заполняем поля текущими данными
   titleInput.value = task.title;
   dateInput.value = task.date;
 
   modal.style.display = "flex";
-  titleInput.focus(); // ставим курсор в поле ввода
+  titleInput.focus();
 }
 
 function renderTasks() {
@@ -519,7 +520,7 @@ function renderTasks() {
   list.textContent = "";
   board.querySelectorAll(".task-card").forEach((el) => el.remove());
 
-  let filtered = tasks;
+  let filtered = [...tasks];
 
   const searchQuery = document
     .getElementById("search")
@@ -543,7 +544,6 @@ function renderTasks() {
     filtered = filtered.filter((t) => t.date === dateFilter);
   }
 
-  // сортировка
   const sortVal = document.getElementById("sort").value;
   filtered.sort(function (a, b) {
     if (sortVal === "custom") return 0; // сохраняем порядок, как в массиве
@@ -567,11 +567,9 @@ function renderTasks() {
     list.style.display = "none";
     board.style.display = "grid";
 
-    board.querySelectorAll(".matrix-col").forEach((col) => {
-      col
-        .querySelectorAll(".task-card, .matrix-col__empty")
-        .forEach((el) => el.remove());
-    });
+    board
+      .querySelectorAll(".task-card, .matrix-col__empty")
+      .forEach((el) => el.remove());
 
     filtered.forEach(function (task) {
       const col = board.querySelector(`[data-quadrant="${task.quadrant}"]`);
@@ -600,26 +598,30 @@ function guessQuadrant(title) {
     text.includes("q1") ||
     text.includes("1 квадрант") ||
     text.includes("срочно важно")
-  )
+  ) {
     return "q1";
+  }
   if (
     text.includes("q2") ||
     text.includes("2 квадрант") ||
     text.includes("важно несрочно")
-  )
+  ) {
     return "q2";
+  }
   if (
     text.includes("q3") ||
     text.includes("3 квадрант") ||
     text.includes("срочно неважно")
-  )
+  ) {
     return "q3";
+  }
   if (
     text.includes("q4") ||
     text.includes("4 квадрант") ||
     text.includes("неважно несрочно")
-  )
+  ) {
     return "q4";
+  }
 
   // используем корни слов, чтобы ловить любые формы
   const q1Roots = [
@@ -658,12 +660,11 @@ function guessQuadrant(title) {
     "отнес",
   ];
 
-  // проверяем, есть ли в тексте хотя бы один из корней
   if (q1Roots.some((root) => text.includes(root))) return "q1";
   if (q2Roots.some((root) => text.includes(root))) return "q2";
   if (q3Roots.some((root) => text.includes(root))) return "q3";
 
-  return "q4"; // по умолчанию, если ничего не подошло
+  return "q4";
 }
 
 function handleFormSubmit(event) {
@@ -691,9 +692,9 @@ function handleTaskClick(event) {
 
   if (event.target.closest(".task-card__checkbox-wrapper")) {
     toggleTask(id);
-  } else if (event.target.classList.contains("task-card__btn--delete")) {
+  } else if (event.target.closest("task-card__btn--delete")) {
     deleteTask(id);
-  } else if (event.target.classList.contains("task-card__btn--edit")) {
+  } else if (event.target.closest("task-card__btn--edit")) {
     editTask(id);
   }
 }
@@ -702,7 +703,7 @@ function createImportModal() {
   const overlay = document.createElement("div");
   overlay.className = "modal-overlay";
   overlay.id = "import-modal";
-  overlay.style.display = "none"; // скрыто по умолчанию
+  overlay.style.display = "none";
 
   const modal = document.createElement("div");
   modal.className = "modal";
@@ -725,12 +726,16 @@ function createImportModal() {
   actions.className = "modal__actions";
 
   const cancelBtn = document.createElement("button");
+  cancelBtn.type = "button";
   cancelBtn.className = "modal__btn modal__btn--cancel";
   cancelBtn.textContent = "отмена";
+  cancelBtn.id = "import-cancel";
 
   const submitBtn = document.createElement("button");
+  submitBtn.type = "button";
   submitBtn.className = "modal__btn modal__btn--submit";
   submitBtn.textContent = "распределить";
+  cancelBtn.id = "import-submit";
 
   actions.append(cancelBtn, submitBtn);
   modal.append(title, hint, textarea, actions);
@@ -777,11 +782,13 @@ function createEditModal() {
   cancelBtn.type = "button";
   cancelBtn.className = "modal__btn modal__btn--cancel";
   cancelBtn.textContent = "отмена";
+  cancelBtn.id = "edit-cancel";
 
   const saveBtn = document.createElement("button");
   saveBtn.type = "submit";
   saveBtn.className = "modal__btn modal__btn--submit";
   saveBtn.textContent = "сохранить";
+  saveBtn.id = "edit-save";
 
   actions.append(cancelBtn, saveBtn);
   form.append(titleInput, dateInput, actions);
