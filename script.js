@@ -1,54 +1,54 @@
 function createHeader() {
-  const header = document.createElement('header');
-  header.className = 'header';
+  const header = document.createElement("header");
+  header.className = "header";
 
-  const titleRow = document.createElement('div');
-  titleRow.className = 'header__title-row';
+  const titleRow = document.createElement("div");
+  titleRow.className = "header__title-row";
 
-  const titleBlock = document.createElement('div');
-  
-  const title = document.createElement('h1');
-  title.className = 'header__title';
-  title.textContent = '4 квадранта';
+  const titleBlock = document.createElement("div");
 
-  const subtitle = document.createElement('p');
-  subtitle.className = 'header__subtitle';
-  subtitle.textContent = 'тетрадка важных дел';
+  const title = document.createElement("h1");
+  title.className = "header__title";
+  title.textContent = "4 квадранта";
+
+  const subtitle = document.createElement("p");
+  subtitle.className = "header__subtitle";
+  subtitle.textContent = "тетрадка важных дел";
 
   titleBlock.append(title, subtitle);
 
   // легенда про матрицу кови
-  const legend = document.createElement('div');
-  legend.className = 'header__legend';
+  const legend = document.createElement("div");
+  legend.className = "header__legend";
 
-  const legendText = document.createElement('p');
-  legendText.textContent = 'В основе — матрица Эйзенхауэра по методу ';
-  
-  const link = document.createElement('a');
-  link.href = 'https://ru.wikipedia.org/wiki/Матрица_Эйзенхауэра';
-  link.target = '_blank';
-  link.rel = 'noopener noreferrer';
-  link.textContent = 'Стивена Кови';
-  link.className = 'header__link';
+  const legendText = document.createElement("p");
+  legendText.textContent = "В основе — матрица Эйзенхауэра по методу ";
+
+  const link = document.createElement("a");
+  link.href = "https://ru.wikipedia.org/wiki/Матрица_Эйзенхауэра";
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = "Стивена Кови";
+  link.className = "header__link";
 
   legendText.appendChild(link);
   legend.appendChild(legendText);
 
   titleRow.append(titleBlock, legend);
-  
-  const stats = document.createElement('div');
-  stats.className = 'header__stats';
-  stats.id = 'stats';
+
+  const stats = document.createElement("div");
+  stats.className = "header__stats";
+  stats.id = "stats";
 
   header.append(titleRow, stats);
   return header;
 }
 
 function updateStats() {
-  const statsContainer = document.getElementById('stats');
+  const statsContainer = document.getElementById("stats");
   if (!statsContainer) return;
-  
-  statsContainer.textContent = '';
+
+  statsContainer.textContent = "";
 
   // считаем только активные задачи
   const counts = { q1: 0, q2: 0, q3: 0, q4: 0 };
@@ -57,14 +57,14 @@ function updateStats() {
   });
 
   const quadrants = [
-    { id: 'q1', label: '🔥' },
-    { id: 'q2', label: '🌱' },
-    { id: 'q3', label: '📞' },
-    { id: 'q4', label: '🍿' },
+    { id: "q1", label: "🔥" },
+    { id: "q2", label: "🌱" },
+    { id: "q3", label: "📞" },
+    { id: "q4", label: "🍿" },
   ];
 
   quadrants.forEach(function (q) {
-    const badge = document.createElement('span');
+    const badge = document.createElement("span");
     badge.className = `header__stat-badge header__stat-badge--${q.id}`;
     badge.textContent = `${q.label} ${counts[q.id]}`;
     statsContainer.appendChild(badge);
@@ -72,46 +72,68 @@ function updateStats() {
 }
 
 function createMatrixLegend() {
-  const section = document.createElement('section');
-  section.className = 'matrix-legend';
+  const section = document.createElement("section");
+  section.className = "matrix-legend";
 
-  const toggleBtn = document.createElement('button');
-  toggleBtn.type = 'button';
-  toggleBtn.className = 'matrix-legend__toggle';
-  toggleBtn.textContent = 'как это работает? (нажми)';
-  
-  const grid = document.createElement('div');
-  grid.className = 'matrix-legend__grid';
-  grid.style.display = 'none'; // по умолчанию скрыта
+  const toggleBtn = document.createElement("button");
+  toggleBtn.type = "button";
+  toggleBtn.className = "matrix-legend__toggle";
+  toggleBtn.textContent = "как это работает? (нажми)";
+
+  const grid = document.createElement("div");
+  grid.className = "matrix-legend__grid";
+  grid.style.display = "none"; // по умолчанию скрыта
 
   // логика раскрытия
-  toggleBtn.addEventListener('click', function () {
-    const isHidden = grid.style.display === 'none';
-    grid.style.display = isHidden ? 'grid' : 'none';
-    toggleBtn.textContent = isHidden ? 'скрыть объяснение' : 'как это работает? (нажми)';
+  toggleBtn.addEventListener("click", function () {
+    const isHidden = grid.style.display === "none";
+    grid.style.display = isHidden ? "grid" : "none";
+    toggleBtn.textContent = isHidden
+      ? "скрыть объяснение"
+      : "как это работает? (нажми)";
   });
 
   const items = [
-    { q: 'q1', title: '🔥 Горит', desc: 'срочно и важно', ex: 'сдать лабу, оплатить налоги' },
-    { q: 'q2', title: '🌱 Растёт', desc: 'важно, но не срочно', ex: 'позвонить маме, спорт' },
-    { q: 'q3', title: '📞 Суета', desc: 'срочно, но неважно', ex: 'ответить в чате, быт' },
-    { q: 'q4', title: '🍿 Пустота', desc: 'неважно и несрочно', ex: 'тикток, полистать ленту' },
+    {
+      q: "q1",
+      title: "🔥 Горит",
+      desc: "срочно и важно",
+      ex: "сдать лабу, оплатить налоги",
+    },
+    {
+      q: "q2",
+      title: "🌱 Растёт",
+      desc: "важно, но не срочно",
+      ex: "позвонить маме, спорт",
+    },
+    {
+      q: "q3",
+      title: "📞 Суета",
+      desc: "срочно, но неважно",
+      ex: "ответить в чате, быт",
+    },
+    {
+      q: "q4",
+      title: "🍿 Пустота",
+      desc: "неважно и несрочно",
+      ex: "тикток, полистать ленту",
+    },
   ];
 
   items.forEach(function (item) {
-    const block = document.createElement('div');
+    const block = document.createElement("div");
     block.className = `matrix-legend__block matrix-legend__block--${item.q}`;
 
-    const title = document.createElement('h3');
-    title.className = 'matrix-legend__title';
+    const title = document.createElement("h3");
+    title.className = "matrix-legend__title";
     title.textContent = item.title;
 
-    const desc = document.createElement('p');
-    desc.className = 'matrix-legend__desc';
+    const desc = document.createElement("p");
+    desc.className = "matrix-legend__desc";
     desc.textContent = item.desc;
 
-    const ex = document.createElement('p');
-    ex.className = 'matrix-legend__ex';
+    const ex = document.createElement("p");
+    ex.className = "matrix-legend__ex";
     ex.textContent = item.ex;
 
     block.append(title, desc, ex);
@@ -123,179 +145,196 @@ function createMatrixLegend() {
 }
 
 function createForm() {
-  const section = document.createElement('section');
-  section.className = 'add-section';
+  const section = document.createElement("section");
+  section.className = "add-section";
 
-  const heading = document.createElement('h2');
-  heading.className = 'add-section__heading';
-  heading.textContent = 'новая запись';
+  const heading = document.createElement("h2");
+  heading.className = "add-section__heading";
+  heading.textContent = "новая запись";
 
-  const form = document.createElement('form');
-  form.className = 'task-form';
-  form.id = 'task-form';
+  const form = document.createElement("form");
+  form.className = "task-form";
+  form.id = "task-form";
 
-  const titleInput = document.createElement('input');
-  titleInput.type = 'text';
-  titleInput.name = 'title';
-  titleInput.placeholder = 'что нужно сделать?';
+  const titleInput = document.createElement("input");
+  titleInput.type = "text";
+  titleInput.name = "title";
+  titleInput.placeholder = "что нужно сделать?";
   titleInput.required = true;
   titleInput.maxLength = 120;
-  titleInput.className = 'task-form__input';
+  titleInput.className = "task-form__input";
 
-  const dateInput = document.createElement('input');
-  dateInput.type = 'date';
-  dateInput.name = 'date';
+  const dateInput = document.createElement("input");
+  dateInput.type = "date";
+  dateInput.name = "date";
   dateInput.required = true;
-  dateInput.className = 'task-form__date';
-  dateInput.lang = 'ru-RU'; 
+  dateInput.className = "task-form__date";
+  dateInput.lang = "ru-RU";
 
-  const quadrantSelect = document.createElement('select');
-  quadrantSelect.name = 'quadrant';
-  quadrantSelect.className = 'task-form__quadrant';
+  const quadrantSelect = document.createElement("select");
+  quadrantSelect.name = "quadrant";
+  quadrantSelect.className = "task-form__quadrant";
 
   const quadrantOptions = [
-    { value: 'q1', text: 'Q1 — горит', title: 'срочно и важно' },
-    { value: 'q2', text: 'Q2 — растёт', title: 'важно, но не срочно' },
-    { value: 'q3', text: 'Q3 — суета', title: 'срочно, но неважно' },
-    { value: 'q4', text: 'Q4 — пустота', title: 'неважно и несрочно' },
+    { value: "q1", text: "Q1 — горит", title: "срочно и важно" },
+    { value: "q2", text: "Q2 — растёт", title: "важно, но не срочно" },
+    { value: "q3", text: "Q3 — суета", title: "срочно, но неважно" },
+    { value: "q4", text: "Q4 — пустота", title: "неважно и несрочно" },
   ];
 
   quadrantOptions.forEach(function (item) {
-    const option = document.createElement('option');
+    const option = document.createElement("option");
     option.value = item.value;
     option.textContent = item.text;
     option.title = item.title;
     quadrantSelect.appendChild(option);
   });
 
-  const submit = document.createElement('button');
-  submit.type = 'submit';
-  submit.className = 'task-form__submit';
-  submit.textContent = 'добавить';
+  const submit = document.createElement("button");
+  submit.type = "submit";
+  submit.className = "task-form__submit";
+  submit.textContent = "добавить";
 
   form.append(titleInput, dateInput, quadrantSelect, submit);
 
-  const importBtn = document.createElement('button');
-  importBtn.type = 'button';
-  importBtn.id = 'import-btn';
-  importBtn.className = 'add-section__import-btn';
-  importBtn.textContent = 'умный импорт списком';
+  const importBtn = document.createElement("button");
+  importBtn.type = "button";
+  importBtn.id = "import-btn";
+  importBtn.className = "add-section__import-btn";
+  importBtn.textContent = "умный импорт списком";
 
   section.append(heading, form, importBtn);
   return section;
 }
 
 function createControls() {
-  const controls = document.createElement('div');
-  controls.className = 'controls';
+  const controls = document.createElement("div");
+  controls.className = "controls";
 
-  const search = document.createElement('input');
-  search.type = 'search';
-  search.id = 'search';
-  search.placeholder = 'поиск по названию';
-  search.className = 'controls__search';
+  const search = document.createElement("input");
+  search.type = "search";
+  search.id = "search";
+  search.placeholder = "поиск по названию";
+  search.className = "controls__search";
 
-  const dateFilter = document.createElement('input');
-  dateFilter.type = 'date';
-  dateFilter.id = 'date-filter';
-  dateFilter.className = 'controls__date';
-  dateFilter.title = 'показать задачи на конкретный день';
+  const dateFilter = document.createElement("input");
+  dateFilter.type = "date";
+  dateFilter.id = "date-filter";
+  dateFilter.className = "controls__date";
+  dateFilter.title = "показать задачи на конкретный день";
 
-  const filter = document.createElement('select');
-  filter.id = 'filter';
-  filter.className = 'controls__select';
+  const filter = document.createElement("select");
+  filter.id = "filter";
+  filter.className = "controls__select";
 
   const filterOptions = [
-    { value: 'all', text: 'все' },
-    { value: 'active', text: 'активные' },
-    { value: 'done', text: 'выполненные' },
+    { value: "all", text: "все" },
+    { value: "active", text: "активные" },
+    { value: "done", text: "выполненные" },
   ];
 
   filterOptions.forEach(function (item) {
-    const option = document.createElement('option');
+    const option = document.createElement("option");
     option.value = item.value;
     option.textContent = item.text;
     filter.appendChild(option);
   });
 
-  filter.value = 'active';
+  filter.value = "active";
 
-  const sort = document.createElement('select');
-  sort.id = 'sort';
-  sort.className = 'controls__select';
+  const sort = document.createElement("select");
+  sort.id = "sort";
+  sort.className = "controls__select";
 
   const sortOptions = [
-    { value: 'priority', text: 'по важности' },
-    { value: 'date-asc', text: 'дата ↑' },
-    { value: 'date-desc', text: 'дата ↓' },
+    { value: "custom", text: "вручную" },
+    { value: "priority", text: "по важности" },
+    { value: "date-asc", text: "дата ↑" },
+    { value: "date-desc", text: "дата ↓" },
   ];
 
   sortOptions.forEach(function (item) {
-    const option = document.createElement('option');
+    const option = document.createElement("option");
     option.value = item.value;
     option.textContent = item.text;
     sort.appendChild(option);
   });
 
-  const viewToggle = document.createElement('button');
-  viewToggle.type = 'button';
-  viewToggle.id = 'view-toggle';
-  viewToggle.className = 'controls__toggle';
-  viewToggle.textContent = 'вид: список';
-  viewToggle.title = 'переключить на матрицу';
+  const viewToggle = document.createElement("button");
+  viewToggle.type = "button";
+  viewToggle.id = "view-toggle";
+  viewToggle.className = "controls__toggle";
+  viewToggle.textContent = "вид: список";
+  viewToggle.title = "переключить на матрицу";
 
-  const importBtn = document.createElement('button');
-  importBtn.type = 'button';
-  importBtn.id = 'import-btn';
-  importBtn.className = 'controls__toggle'; 
-  importBtn.textContent = 'умный импорт';
+  const importBtn = document.createElement("button");
+  importBtn.type = "button";
+  importBtn.id = "import-btn";
+  importBtn.className = "controls__toggle";
+  importBtn.textContent = "умный импорт";
 
   controls.append(search, dateFilter, filter, sort, viewToggle);
   return controls;
 }
 
 function createTaskList() {
-  const list = document.createElement('div');
-  list.className = 'task-list';
-  list.id = 'task-list';
+  const list = document.createElement("div");
+  list.className = "task-list";
+  list.id = "task-list";
   return list;
 }
 
 function createMatrixBoard() {
-  const board = document.createElement('div');
-  board.className = 'matrix-board';
-  board.id = 'matrix-board';
-  board.style.display = 'none';
+  const board = document.createElement("div");
+  board.className = "matrix-board";
+  board.id = "matrix-board";
+  board.style.display = "none";
 
   const quadrantsInfo = {
-    q1: { title: '🔥 Горит', desc: 'срочно и важно', ex: 'сдать лабу, оплатить налоги' },
-    q2: { title: '🌱 Растёт', desc: 'важно, но не срочно', ex: 'позвонить маме, спорт' },
-    q3: { title: '📞 Суета', desc: 'срочно, но неважно', ex: 'ответить в чате, быт' },
-    q4: { title: '🍿 Пустота', desc: 'неважно и несрочно', ex: 'тикток, полистать ленту' },
+    q1: {
+      title: "🔥 Горит",
+      desc: "срочно и важно",
+      ex: "сдать лабу, оплатить налоги",
+    },
+    q2: {
+      title: "🌱 Растёт",
+      desc: "важно, но не срочно",
+      ex: "позвонить маме, спорт",
+    },
+    q3: {
+      title: "📞 Суета",
+      desc: "срочно, но неважно",
+      ex: "ответить в чате, быт",
+    },
+    q4: {
+      title: "🍿 Пустота",
+      desc: "неважно и несрочно",
+      ex: "тикток, полистать ленту",
+    },
   };
 
-  const quadrants = ['q1', 'q2', 'q3', 'q4'];
-  
+  const quadrants = ["q1", "q2", "q3", "q4"];
+
   quadrants.forEach(function (q) {
-    const col = document.createElement('div');
+    const col = document.createElement("div");
     col.className = `matrix-col matrix-col--${q}`;
     col.dataset.quadrant = q;
 
     const info = quadrantsInfo[q];
 
-    const header = document.createElement('div');
-    header.className = 'matrix-col__header';
+    const header = document.createElement("div");
+    header.className = "matrix-col__header";
 
-    const title = document.createElement('h3');
-    title.className = 'matrix-col__title';
+    const title = document.createElement("h3");
+    title.className = "matrix-col__title";
     title.textContent = info.title;
 
-    const desc = document.createElement('p');
-    desc.className = 'matrix-col__desc';
+    const desc = document.createElement("p");
+    desc.className = "matrix-col__desc";
     desc.textContent = info.desc;
 
-    const ex = document.createElement('p');
-    ex.className = 'matrix-col__ex';
+    const ex = document.createElement("p");
+    ex.className = "matrix-col__ex";
     ex.textContent = info.ex;
 
     header.append(title, desc, ex);
@@ -307,61 +346,61 @@ function createMatrixBoard() {
 }
 
 function createToastContainer() {
-  const container = document.createElement('div');
-  container.className = 'toasts';
-  container.id = 'toasts';
+  const container = document.createElement("div");
+  container.className = "toasts";
+  container.id = "toasts";
   return container;
 }
 
 let tasks = [];
-let currentView = 'list'; // 'list' или 'matrix'
-let currentDateFilter = '';
+let currentView = "list"; // 'list' или 'matrix'
+let currentDateFilter = "";
 let editingTaskId = null;
 
 function loadTasks() {
-  const saved = localStorage.getItem('kovi-tasks');
+  const saved = localStorage.getItem("kovi-tasks");
   if (saved) {
     tasks = JSON.parse(saved);
   }
 }
 
 function saveTasks() {
-  localStorage.setItem('kovi-tasks', JSON.stringify(tasks));
+  localStorage.setItem("kovi-tasks", JSON.stringify(tasks));
 }
 
 const q2Reminders = [
-  'полить цветы — 2 минуты, а сколько радости!',
-  'покормить питомца или просто погладить его.',
-  'написать родителям или близким — просто так, без повода.',
-  'размяться 5 минут? спина скажет спасибо.',
-  'выпить стакан воды и сделать глубокий вдох.',
-  'почитать книгу вместо бесконечной ленты?',
-  'записаться на профилактический осмотр к врачу.',
-  'выучить 5 новых слов на иностранном языке.'
+  "полить цветы — 2 минуты, а сколько радости!",
+  "покормить питомца или просто погладить его.",
+  "написать родителям или близким — просто так, без повода.",
+  "размяться 5 минут? спина скажет спасибо.",
+  "выпить стакан воды и сделать глубокий вдох.",
+  "почитать книгу вместо бесконечной ленты?",
+  "записаться на профилактический осмотр к врачу.",
+  "выучить 5 новых слов на иностранном языке.",
 ];
 let reminderIndex = 0;
 
 function showToast(text) {
-  const container = document.getElementById('toasts');
-  
+  const container = document.getElementById("toasts");
+
   // удаляем старый тост, чтобы не копились
   if (container.firstChild) {
     container.firstChild.remove();
   }
 
-  const toast = document.createElement('div');
-  toast.className = 'toast';
+  const toast = document.createElement("div");
+  toast.className = "toast";
 
-  const msg = document.createElement('p');
-  msg.className = 'toast__text';
+  const msg = document.createElement("p");
+  msg.className = "toast__text";
   msg.textContent = text;
 
-  const closeBtn = document.createElement('button');
-  closeBtn.className = 'toast__close';
-  closeBtn.textContent = '✕';
-  closeBtn.setAttribute('aria-label', 'закрыть напоминание');
+  const closeBtn = document.createElement("button");
+  closeBtn.className = "toast__close";
+  closeBtn.textContent = "✕";
+  closeBtn.setAttribute("aria-label", "закрыть напоминание");
 
-  closeBtn.addEventListener('click', function () {
+  closeBtn.addEventListener("click", function () {
     toast.remove();
   });
 
@@ -373,12 +412,12 @@ let lastReminderIndex = -1;
 
 function getRandomReminder() {
   let randomIndex = Math.floor(Math.random() * q2Reminders.length);
-  
+
   // если выпал тот же тост, что и в прошлый раз, берем следующий по кругу
   if (randomIndex === lastReminderIndex) {
     randomIndex = (randomIndex + 1) % q2Reminders.length;
   }
-  
+
   lastReminderIndex = randomIndex;
   return q2Reminders[randomIndex];
 }
@@ -396,77 +435,77 @@ function startReminders() {
 }
 
 function createTaskCard(task) {
-  const card = document.createElement('article');
+  const card = document.createElement("article");
   card.className = `task-card task-card--${task.quadrant}`;
   card.dataset.id = task.id;
   card.draggable = true;
 
   if (task.done) {
-    card.classList.add('task-card--done');
+    card.classList.add("task-card--done");
   }
 
-  const header = document.createElement('div');
-  header.className = 'task-card__header';
+  const header = document.createElement("div");
+  header.className = "task-card__header";
 
-  const title = document.createElement('h3');
-  title.className = 'task-card__title';
+  const title = document.createElement("h3");
+  title.className = "task-card__title";
   title.textContent = task.title;
 
-  const date = document.createElement('time');
-  date.className = 'task-card__date';
+  const date = document.createElement("time");
+  date.className = "task-card__date";
   date.dateTime = task.date;
-  date.lang = 'ru-RU';
-  date.textContent = new Date(task.date).toLocaleDateString('ru-RU', {
-    day: 'numeric',
-    month: 'short',
+  date.lang = "ru-RU";
+  date.textContent = new Date(task.date).toLocaleDateString("ru-RU", {
+    day: "numeric",
+    month: "short",
   });
 
   header.append(title, date);
 
-  const footer = document.createElement('div');
-  footer.className = 'task-card__footer';
+  const footer = document.createElement("div");
+  footer.className = "task-card__footer";
 
-  const badge = document.createElement('span');
-  badge.className = 'task-card__badge';
-  
+  const badge = document.createElement("span");
+  badge.className = "task-card__badge";
+
   const quadrantNames = {
-    q1: '🔥 Горит',
-    q2: '🌱 Растёт',
-    q3: '📞 Суета',
-    q4: '🍿 Пустота',
+    q1: "🔥 Горит",
+    q2: "🌱 Растёт",
+    q3: "📞 Суета",
+    q4: "🍿 Пустота",
   };
   badge.textContent = quadrantNames[task.quadrant];
 
-  const actions = document.createElement('div');
-  actions.className = 'task-card__actions';
+  const actions = document.createElement("div");
+  actions.className = "task-card__actions";
 
-  const checkboxWrapper = document.createElement('label');
-  checkboxWrapper.className = 'task-card__checkbox-wrapper has-tooltip';
-  checkboxWrapper.dataset.tooltip = 'выполнено';
+  const checkboxWrapper = document.createElement("label");
+  checkboxWrapper.className = "task-card__checkbox-wrapper has-tooltip";
+  checkboxWrapper.dataset.tooltip = "выполнено";
 
-  const doneBtn = document.createElement('input');
-  doneBtn.type = 'checkbox';
-  doneBtn.className = 'task-card__checkbox';
+  const doneBtn = document.createElement("input");
+  doneBtn.type = "checkbox";
+  doneBtn.className = "task-card__checkbox";
   doneBtn.checked = task.done;
-  doneBtn.setAttribute('aria-label', 'отметить выполненной');
+  doneBtn.setAttribute("aria-label", "отметить выполненной");
   checkboxWrapper.appendChild(doneBtn);
 
-  const editBtn = document.createElement('button');
-  editBtn.className = 'task-card__btn task-card__btn--edit has-tooltip';
-  editBtn.textContent = '✏️';
-  editBtn.setAttribute('aria-label', 'редактировать');
-  editBtn.dataset.tooltip = 'редактировать';
+  const editBtn = document.createElement("button");
+  editBtn.className = "task-card__btn task-card__btn--edit has-tooltip";
+  editBtn.textContent = "✏️";
+  editBtn.setAttribute("aria-label", "редактировать");
+  editBtn.dataset.tooltip = "редактировать";
 
-  const deleteBtn = document.createElement('button');
-  deleteBtn.className = 'task-card__btn task-card__btn--delete has-tooltip';
-  deleteBtn.textContent = '✕';
-  deleteBtn.setAttribute('aria-label', 'удалить');
-  deleteBtn.dataset.tooltip = 'удалить';
+  const deleteBtn = document.createElement("button");
+  deleteBtn.className = "task-card__btn task-card__btn--delete has-tooltip";
+  deleteBtn.textContent = "✕";
+  deleteBtn.setAttribute("aria-label", "удалить");
+  deleteBtn.dataset.tooltip = "удалить";
 
   actions.append(checkboxWrapper, editBtn, deleteBtn);
   footer.append(badge, actions);
   card.append(header, footer);
-  
+
   return card;
 }
 
@@ -490,93 +529,97 @@ function deleteTask(id) {
 }
 
 function editTask(id) {
-  const task = tasks.find(t => t.id === id);
+  const task = tasks.find((t) => t.id === id);
   if (!task) return;
 
   editingTaskId = id;
-  
-  const modal = document.getElementById('edit-modal');
-  const titleInput = document.getElementById('edit-title');
-  const dateInput = document.getElementById('edit-date');
+
+  const modal = document.getElementById("edit-modal");
+  const titleInput = document.getElementById("edit-title");
+  const dateInput = document.getElementById("edit-date");
 
   // заполняем поля текущими данными
   titleInput.value = task.title;
   dateInput.value = task.date;
 
-  modal.style.display = 'flex';
+  modal.style.display = "flex";
   titleInput.focus(); // ставим курсор в поле ввода
 }
 
 function renderTasks() {
-  const list = document.getElementById('task-list');
-  const board = document.getElementById('matrix-board');
-  
-  list.textContent = '';
-  board.querySelectorAll('.task-card').forEach(el => el.remove());
+  const list = document.getElementById("task-list");
+  const board = document.getElementById("matrix-board");
+
+  list.textContent = "";
+  board.querySelectorAll(".task-card").forEach((el) => el.remove());
 
   let filtered = tasks;
-  
-  const searchQuery = document.getElementById('search').value.trim().toLowerCase();
+
+  const searchQuery = document
+    .getElementById("search")
+    .value.trim()
+    .toLowerCase();
   if (searchQuery) {
-    filtered = filtered.filter(t => t.title.toLowerCase().includes(searchQuery));
+    filtered = filtered.filter((t) =>
+      t.title.toLowerCase().includes(searchQuery),
+    );
   }
 
-  const statusFilter = document.getElementById('filter').value;
-  if (statusFilter === 'active') {
-    filtered = filtered.filter(t => !t.done);
-  } else if (statusFilter === 'done') {
-    filtered = filtered.filter(t => t.done);
+  const statusFilter = document.getElementById("filter").value;
+  if (statusFilter === "active") {
+    filtered = filtered.filter((t) => !t.done);
+  } else if (statusFilter === "done") {
+    filtered = filtered.filter((t) => t.done);
   }
 
-  const dateFilter = document.getElementById('date-filter').value;
+  const dateFilter = document.getElementById("date-filter").value;
   if (dateFilter) {
-    filtered = filtered.filter(t => t.date === dateFilter);
+    filtered = filtered.filter((t) => t.date === dateFilter);
   }
 
   // сортировка
-  const sortVal = document.getElementById('sort').value;
+  const sortVal = document.getElementById("sort").value;
   filtered.sort(function (a, b) {
-    if (sortVal === 'priority') {
-      // сортируем по названию квадранта: q1, q2, q3, q4
-      return a.quadrant.localeCompare(b.quadrant);
-    }
-    if (sortVal === 'date-asc') return new Date(a.date) - new Date(b.date);
+    if (sortVal === "custom") return 0; // сохраняем порядок, как в массиве
+    if (sortVal === "priority") return a.quadrant.localeCompare(b.quadrant);
+    if (sortVal === "date-asc") return new Date(a.date) - new Date(b.date);
     return new Date(b.date) - new Date(a.date);
   });
 
-    const legend = document.querySelector('.matrix-legend');
+  const legend = document.querySelector(".matrix-legend");
 
-  if (currentView === 'list') {
-    legend.style.display = 'grid'; // показываем легенду в списке
-    list.style.display = 'flex';
-    board.style.display = 'none';
-    
+  if (currentView === "list") {
+    legend.style.display = "grid"; // показываем легенду в списке
+    list.style.display = "flex";
+    board.style.display = "none";
+
     filtered.forEach(function (task) {
       list.appendChild(createTaskCard(task));
     });
   } else {
-    legend.style.display = 'none'; // скрываем легенду в матрице
-    list.style.display = 'none';
-    board.style.display = 'grid';
+    legend.style.display = "none"; // скрываем легенду в матрице
+    list.style.display = "none";
+    board.style.display = "grid";
 
-    board.querySelectorAll('.matrix-col').forEach(col => {
-      col.querySelectorAll('.task-card, .matrix-col__empty').forEach(el => el.remove());
+    board.querySelectorAll(".matrix-col").forEach((col) => {
+      col
+        .querySelectorAll(".task-card, .matrix-col__empty")
+        .forEach((el) => el.remove());
     });
-
 
     filtered.forEach(function (task) {
       const col = board.querySelector(`[data-quadrant="${task.quadrant}"]`);
       if (col) {
         const card = createTaskCard(task);
-        card.classList.add('task-card--compact');
+        card.classList.add("task-card--compact");
         col.appendChild(card);
       }
     });
-    board.querySelectorAll('.matrix-col').forEach(col => {
-      if (!col.querySelector('.task-card')) {
-        const empty = document.createElement('p');
-        empty.className = 'matrix-col__empty';
-        empty.textContent = 'перетащи сюда задачу';
+    board.querySelectorAll(".matrix-col").forEach((col) => {
+      if (!col.querySelector(".task-card")) {
+        const empty = document.createElement("p");
+        empty.className = "matrix-col__empty";
+        empty.textContent = "перетащи сюда задачу";
         col.appendChild(empty);
       }
     });
@@ -587,22 +630,74 @@ function renderTasks() {
 function guessQuadrant(title) {
   const text = title.toLowerCase();
 
-  if (text.includes('q1') || text.includes('1 квадрант') || text.includes('срочно важно')) return 'q1';
-  if (text.includes('q2') || text.includes('2 квадрант') || text.includes('важно несрочно')) return 'q2';
-  if (text.includes('q3') || text.includes('3 квадрант') || text.includes('срочно неважно')) return 'q3';
-  if (text.includes('q4') || text.includes('4 квадрант') || text.includes('неважно несрочно')) return 'q4';
+  if (
+    text.includes("q1") ||
+    text.includes("1 квадрант") ||
+    text.includes("срочно важно")
+  )
+    return "q1";
+  if (
+    text.includes("q2") ||
+    text.includes("2 квадрант") ||
+    text.includes("важно несрочно")
+  )
+    return "q2";
+  if (
+    text.includes("q3") ||
+    text.includes("3 квадрант") ||
+    text.includes("срочно неважно")
+  )
+    return "q3";
+  if (
+    text.includes("q4") ||
+    text.includes("4 квадрант") ||
+    text.includes("неважно несрочно")
+  )
+    return "q4";
 
   // используем корни слов, чтобы ловить любые формы
-  const q1Roots = ['лр', 'учи', 'дз', 'дедлайн', 'сда', 'экзамен', 'сесс', 'налог', 'оплат', 'защит'];
-  const q2Roots = ['звон', 'мам', 'пап', 'спорт', 'зуб', 'врач', 'книг', 'учеб', 'развит'];
-  const q3Roots = ['ответ', 'чат', 'пис', 'куп', 'быт', 'убра', 'готов', 'встреч', 'забер', 'отнес'];
-  
+  const q1Roots = [
+    "лр",
+    "учи",
+    "дз",
+    "дедлайн",
+    "сда",
+    "экзамен",
+    "сесс",
+    "налог",
+    "оплат",
+    "защит",
+  ];
+  const q2Roots = [
+    "звон",
+    "мам",
+    "пап",
+    "спорт",
+    "зуб",
+    "врач",
+    "книг",
+    "учеб",
+    "развит",
+  ];
+  const q3Roots = [
+    "ответ",
+    "чат",
+    "пис",
+    "куп",
+    "быт",
+    "убра",
+    "готов",
+    "встреч",
+    "забер",
+    "отнес",
+  ];
+
   // проверяем, есть ли в тексте хотя бы один из корней
-  if (q1Roots.some(root => text.includes(root))) return 'q1';
-  if (q2Roots.some(root => text.includes(root))) return 'q2';
-  if (q3Roots.some(root => text.includes(root))) return 'q3';
-  
-  return 'q4'; // по умолчанию, если ничего не подошло
+  if (q1Roots.some((root) => text.includes(root))) return "q1";
+  if (q2Roots.some((root) => text.includes(root))) return "q2";
+  if (q3Roots.some((root) => text.includes(root))) return "q3";
+
+  return "q4"; // по умолчанию, если ничего не подошло
 }
 
 function handleFormSubmit(event) {
@@ -624,51 +719,52 @@ function handleFormSubmit(event) {
 }
 
 function handleTaskClick(event) {
-  const card = event.target.closest('.task-card');
+  const card = event.target.closest(".task-card");
   if (!card) return;
   const id = card.dataset.id;
 
-  if (event.target.closest('.task-card__checkbox-wrapper')) {
+  if (event.target.closest(".task-card__checkbox-wrapper")) {
     toggleTask(id);
-  } else if (event.target.classList.contains('task-card__btn--delete')) {
+  } else if (event.target.classList.contains("task-card__btn--delete")) {
     deleteTask(id);
-  } else if (event.target.classList.contains('task-card__btn--edit')) {
+  } else if (event.target.classList.contains("task-card__btn--edit")) {
     editTask(id);
   }
 }
 
 function createImportModal() {
-  const overlay = document.createElement('div');
-  overlay.className = 'modal-overlay';
-  overlay.id = 'import-modal';
-  overlay.style.display = 'none'; // скрыто по умолчанию
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  overlay.id = "import-modal";
+  overlay.style.display = "none"; // скрыто по умолчанию
 
-  const modal = document.createElement('div');
-  modal.className = 'modal';
+  const modal = document.createElement("div");
+  modal.className = "modal";
 
-  const title = document.createElement('h2');
-  title.className = 'modal__title';
-  title.textContent = 'умный импорт';
+  const title = document.createElement("h2");
+  title.className = "modal__title";
+  title.textContent = "умный импорт";
 
-  const hint = document.createElement('p');
-  hint.className = 'modal__hint';
-  hint.textContent = 'вставь задачи, каждую с новой строки. я сам раскидаю их по квадрантам!';
+  const hint = document.createElement("p");
+  hint.className = "modal__hint";
+  hint.textContent =
+    "вставь задачи, каждую с новой строки. я сам раскидаю их по квадрантам!";
 
-  const textarea = document.createElement('textarea');
-  textarea.className = 'modal__textarea';
-  textarea.id = 'import-textarea';
-  textarea.placeholder = 'сдать лабу завтра\nпозвонить маме\nкупить хлеб';
+  const textarea = document.createElement("textarea");
+  textarea.className = "modal__textarea";
+  textarea.id = "import-textarea";
+  textarea.placeholder = "сдать лабу завтра\nпозвонить маме\nкупить хлеб";
 
-  const actions = document.createElement('div');
-  actions.className = 'modal__actions';
+  const actions = document.createElement("div");
+  actions.className = "modal__actions";
 
-  const cancelBtn = document.createElement('button');
-  cancelBtn.className = 'modal__btn modal__btn--cancel';
-  cancelBtn.textContent = 'отмена';
+  const cancelBtn = document.createElement("button");
+  cancelBtn.className = "modal__btn modal__btn--cancel";
+  cancelBtn.textContent = "отмена";
 
-  const submitBtn = document.createElement('button');
-  submitBtn.className = 'modal__btn modal__btn--submit';
-  submitBtn.textContent = 'распределить';
+  const submitBtn = document.createElement("button");
+  submitBtn.className = "modal__btn modal__btn--submit";
+  submitBtn.textContent = "распределить";
 
   actions.append(cancelBtn, submitBtn);
   modal.append(title, hint, textarea, actions);
@@ -677,49 +773,49 @@ function createImportModal() {
 }
 
 function createEditModal() {
-  const overlay = document.createElement('div');
-  overlay.className = 'modal-overlay';
-  overlay.id = 'edit-modal';
-  overlay.style.display = 'none';
+  const overlay = document.createElement("div");
+  overlay.className = "modal-overlay";
+  overlay.id = "edit-modal";
+  overlay.style.display = "none";
 
-  const modal = document.createElement('div');
-  modal.className = 'modal';
+  const modal = document.createElement("div");
+  modal.className = "modal";
 
-  const title = document.createElement('h2');
-  title.className = 'modal__title';
-  title.textContent = 'редактировать';
+  const title = document.createElement("h2");
+  title.className = "modal__title";
+  title.textContent = "редактировать";
 
-  const form = document.createElement('form');
-  form.id = 'edit-form';
-  form.className = 'modal__form';
+  const form = document.createElement("form");
+  form.id = "edit-form";
+  form.className = "modal__form";
 
-  const titleInput = document.createElement('input');
-  titleInput.type = 'text';
-  titleInput.id = 'edit-title';
-  titleInput.className = 'modal__input';
+  const titleInput = document.createElement("input");
+  titleInput.type = "text";
+  titleInput.id = "edit-title";
+  titleInput.className = "modal__input";
   titleInput.required = true;
   titleInput.maxLength = 120;
-  titleInput.placeholder = 'название задачи';
+  titleInput.placeholder = "название задачи";
 
-  const dateInput = document.createElement('input');
-  dateInput.type = 'date';
-  dateInput.id = 'edit-date';
-  dateInput.className = 'modal__input';
+  const dateInput = document.createElement("input");
+  dateInput.type = "date";
+  dateInput.id = "edit-date";
+  dateInput.className = "modal__input";
   dateInput.required = true;
-  dateInput.lang = 'ru-RU'; 
+  dateInput.lang = "ru-RU";
 
-  const actions = document.createElement('div');
-  actions.className = 'modal__actions';
+  const actions = document.createElement("div");
+  actions.className = "modal__actions";
 
-  const cancelBtn = document.createElement('button');
-  cancelBtn.type = 'button';
-  cancelBtn.className = 'modal__btn modal__btn--cancel';
-  cancelBtn.textContent = 'отмена';
+  const cancelBtn = document.createElement("button");
+  cancelBtn.type = "button";
+  cancelBtn.className = "modal__btn modal__btn--cancel";
+  cancelBtn.textContent = "отмена";
 
-  const saveBtn = document.createElement('button');
-  saveBtn.type = 'submit';
-  saveBtn.className = 'modal__btn modal__btn--submit';
-  saveBtn.textContent = 'сохранить';
+  const saveBtn = document.createElement("button");
+  saveBtn.type = "submit";
+  saveBtn.className = "modal__btn modal__btn--submit";
+  saveBtn.textContent = "сохранить";
 
   actions.append(cancelBtn, saveBtn);
   form.append(titleInput, dateInput, actions);
@@ -732,176 +828,233 @@ function createEditModal() {
 function init() {
   loadTasks();
 
-  const main = document.createElement('main');
-  main.className = 'main';
-  main.append(createMatrixLegend(), createForm(), createControls(), createTaskList(), createMatrixBoard());
+  const main = document.createElement("main");
+  main.className = "main";
+  main.append(
+    createMatrixLegend(),
+    createForm(),
+    createControls(),
+    createTaskList(),
+    createMatrixBoard(),
+  );
 
-  document.body.append(createHeader(), main, createToastContainer(), createImportModal(), createEditModal());
+  document.body.append(
+    createHeader(),
+    main,
+    createToastContainer(),
+    createImportModal(),
+    createEditModal(),
+  );
 
-  document.getElementById('task-form').addEventListener('submit', handleFormSubmit);
-  
+  document
+    .getElementById("task-form")
+    .addEventListener("submit", handleFormSubmit);
+
   // обработчики фильтров
-  document.getElementById('search').addEventListener('input', renderTasks);
-  document.getElementById('filter').addEventListener('change', renderTasks);
-  document.getElementById('sort').addEventListener('change', renderTasks);
-  document.getElementById('date-filter').addEventListener('change', renderTasks);
+  document.getElementById("search").addEventListener("input", renderTasks);
+  document.getElementById("filter").addEventListener("change", renderTasks);
+  document.getElementById("sort").addEventListener("change", renderTasks);
+  document
+    .getElementById("date-filter")
+    .addEventListener("change", renderTasks);
 
   // переключение вида
-  document.getElementById('view-toggle').addEventListener('click', function(event) {
-    currentView = currentView === 'list' ? 'matrix' : 'list';
-    event.target.textContent = currentView === 'list' ? 'вид: список' : 'вид: матрица';
-    renderTasks();
-  });
+  document
+    .getElementById("view-toggle")
+    .addEventListener("click", function (event) {
+      currentView = currentView === "list" ? "matrix" : "list";
+      event.target.textContent =
+        currentView === "list" ? "вид: список" : "вид: матрица";
+      renderTasks();
+    });
 
   // делегирование кликов
-  document.getElementById('task-list').addEventListener('click', handleTaskClick);
-  document.getElementById('matrix-board').addEventListener('click', handleTaskClick);
-
+  document
+    .getElementById("task-list")
+    .addEventListener("click", handleTaskClick);
+  document
+    .getElementById("matrix-board")
+    .addEventListener("click", handleTaskClick);
 
   function initDragAndDrop() {
     let draggedTaskId = null;
 
-    document.addEventListener('dragstart', function (event) {
-      const card = event.target.closest('.task-card');
+    document.addEventListener("dragstart", function (event) {
+      const card = event.target.closest(".task-card");
       if (!card) return;
 
       draggedTaskId = card.dataset.id;
-      card.classList.add('dragging');
-      event.dataTransfer.effectAllowed = 'move';
-      event.dataTransfer.setData('text/plain', draggedTaskId);
+      card.classList.add("dragging");
+      event.dataTransfer.effectAllowed = "move";
+      event.dataTransfer.setData("text/plain", draggedTaskId);
     });
 
-    document.addEventListener('dragend', function (event) {
-      const card = event.target.closest('.task-card');
-      if (card) card.classList.remove('dragging');
+    document.addEventListener("dragend", function (event) {
+      const card = event.target.closest(".task-card");
+      if (card) card.classList.remove("dragging");
 
-      document.querySelectorAll('.matrix-col').forEach(function (col) {
-        col.classList.remove('drag-over');
+      document.querySelectorAll(".matrix-col").forEach(function (col) {
+        col.classList.remove("drag-over");
       });
 
       draggedTaskId = null;
     });
 
-    const board = document.getElementById('matrix-board');
-    if (!board) return;
+    const board = document.getElementById("matrix-board");
+    if (board) {
+      board.addEventListener("dragover", function (event) {
+        const col = event.target.closest(".matrix-col");
+        if (!col) return;
 
-    board.addEventListener('dragover', function (event) {
-      const col = event.target.closest('.matrix-col');
-      if (!col) return;
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
 
-      event.preventDefault();
-      event.dataTransfer.dropEffect = 'move';
-
-      document.querySelectorAll('.matrix-col').forEach(function (c) {
-        c.classList.remove('drag-over');
-      });
-      col.classList.add('drag-over');
-    });
-
-    board.addEventListener('drop', function (event) {
-      const col = event.target.closest('.matrix-col');
-      if (!col || !draggedTaskId) return;
-
-      event.preventDefault();
-
-      const newQuadrant = col.dataset.quadrant;
-      const task = tasks.find(function (t) {
-        return t.id === draggedTaskId;
+        document.querySelectorAll(".matrix-col").forEach(function (c) {
+          c.classList.remove("drag-over");
+        });
+        col.classList.add("drag-over");
       });
 
-      if (task && task.quadrant !== newQuadrant) {
-        task.quadrant = newQuadrant;
-        saveTasks();
-        renderTasks();
-      }
+      board.addEventListener("drop", function (event) {
+        const col = event.target.closest(".matrix-col");
+        if (!col || !draggedTaskId) return;
 
-      col.classList.remove('drag-over');
-      draggedTaskId = null;
-    });
+        event.preventDefault();
 
-  const modal = document.getElementById('import-modal');
-  const importBtn = document.getElementById('import-btn');
-  const cancelBtn = modal.querySelector('.modal__btn--cancel');
-  const submitBtn = modal.querySelector('.modal__btn--submit');
-  const textarea = document.getElementById('import-textarea');
+        const newQuadrant = col.dataset.quadrant;
+        const task = tasks.find(function (t) {
+          return t.id === draggedTaskId;
+        });
 
-  importBtn.addEventListener('click', function () {
-    modal.style.display = 'flex';
-    textarea.focus();
-  });
+        if (task && task.quadrant !== newQuadrant) {
+          task.quadrant = newQuadrant;
+          saveTasks();
+          renderTasks();
+        }
 
-  cancelBtn.addEventListener('click', function () {
-    modal.style.display = 'none';
-    textarea.value = '';
-  });
-
-  // закрытие по клику на темный фон
-  modal.addEventListener('click', function (e) {
-    if (e.target === modal) {
-      modal.style.display = 'none';
-      textarea.value = '';
+        col.classList.remove("drag-over");
+        draggedTaskId = null;
+      });
     }
-  });
 
-  submitBtn.addEventListener('click', function () {
-    const text = textarea.value;
-    if (!text.trim()) return;
+    const taskList = document.getElementById("task-list");
+    taskList.addEventListener("dragover", function (e) {
+      e.preventDefault(); // разрешаем сброс
+      const draggingCard = document.querySelector(".task-card.dragging");
+      const targetCard = e.target.closest(".task-card");
 
-    const lines = text.split('\n').filter(line => line.trim() !== '');
-    
-    lines.forEach(function(line) {
-      const title = line.trim();
-      const quadrant = guessQuadrant(title);
-      
-      const newTask = {
-        id: Date.now().toString() + Math.random().toString(36).substring(2, 5),
-        title: title,
-        date: new Date().toISOString().split('T')[0],
-        quadrant: quadrant,
-        done: false,
-      };
-      
-      tasks.push(newTask);
+      if (!draggingCard || !targetCard || draggingCard === targetCard) return;
+
+      // вычисляем, куда вставить: выше или ниже целевой карточки
+      const rect = targetCard.getBoundingClientRect();
+      const offset = e.clientY - rect.top;
+      const isAfter = offset > rect.height / 2;
+
+      if (isAfter) {
+        targetCard.after(draggingCard);
+      } else {
+        targetCard.before(draggingCard);
+      }
     });
 
-    saveTasks();
-    renderTasks();
-    
-    modal.style.display = 'none';
-    textarea.value = '';
-  });
+    taskList.addEventListener("drop", function (e) {
+      e.preventDefault();
+      // получаем новые ID в том порядке, в котором они сейчас в DOM
+      const cards = Array.from(taskList.querySelectorAll(".task-card"));
+      const newIds = cards.map((c) => c.dataset.id);
 
+      // пересортировываем массив tasks согласно новому порядку
+      tasks.sort((a, b) => newIds.indexOf(a.id) - newIds.indexOf(b.id));
+      saveTasks();
+
+      // принудительно ставим сортировку "вручную", чтобы не сбить порядок
+      document.getElementById("sort").value = "custom";
+      renderTasks();
+    });
+
+    const modal = document.getElementById("import-modal");
+    const importBtn = document.getElementById("import-btn");
+    const cancelBtn = modal.querySelector(".modal__btn--cancel");
+    const submitBtn = modal.querySelector(".modal__btn--submit");
+    const textarea = document.getElementById("import-textarea");
+
+    importBtn.addEventListener("click", function () {
+      modal.style.display = "flex";
+      textarea.focus();
+    });
+
+    cancelBtn.addEventListener("click", function () {
+      modal.style.display = "none";
+      textarea.value = "";
+    });
+
+    // закрытие по клику на темный фон
+    modal.addEventListener("click", function (e) {
+      if (e.target === modal) {
+        modal.style.display = "none";
+        textarea.value = "";
+      }
+    });
+
+    submitBtn.addEventListener("click", function () {
+      const text = textarea.value;
+      if (!text.trim()) return;
+
+      const lines = text.split("\n").filter((line) => line.trim() !== "");
+
+      lines.forEach(function (line) {
+        const title = line.trim();
+        const quadrant = guessQuadrant(title);
+
+        const newTask = {
+          id:
+            Date.now().toString() + Math.random().toString(36).substring(2, 5),
+          title: title,
+          date: new Date().toISOString().split("T")[0],
+          quadrant: quadrant,
+          done: false,
+        };
+
+        tasks.push(newTask);
+      });
+
+      saveTasks();
+      renderTasks();
+
+      modal.style.display = "none";
+      textarea.value = "";
+    });
   }
 
-    // логика модалки редактирования
-  const editModal = document.getElementById('edit-modal');
-  const editForm = document.getElementById('edit-form');
-  const editCancelBtn = editModal.querySelector('.modal__btn--cancel');
+  // логика модалки редактирования
+  const editModal = document.getElementById("edit-modal");
+  const editForm = document.getElementById("edit-form");
+  const editCancelBtn = editModal.querySelector(".modal__btn--cancel");
 
-  editForm.addEventListener('submit', function (e) {
+  editForm.addEventListener("submit", function (e) {
     e.preventDefault();
     if (!editingTaskId) return;
 
-    const task = tasks.find(t => t.id === editingTaskId);
+    const task = tasks.find((t) => t.id === editingTaskId);
     if (task) {
-      task.title = document.getElementById('edit-title').value.trim();
-      task.date = document.getElementById('edit-date').value;
+      task.title = document.getElementById("edit-title").value.trim();
+      task.date = document.getElementById("edit-date").value;
       saveTasks();
       renderTasks();
     }
 
-    editModal.style.display = 'none';
+    editModal.style.display = "none";
     editingTaskId = null;
   });
 
-  editCancelBtn.addEventListener('click', function () {
-    editModal.style.display = 'none';
+  editCancelBtn.addEventListener("click", function () {
+    editModal.style.display = "none";
     editingTaskId = null;
   });
 
-  editModal.addEventListener('click', function (e) {
+  editModal.addEventListener("click", function (e) {
     if (e.target === editModal) {
-      editModal.style.display = 'none';
+      editModal.style.display = "none";
       editingTaskId = null;
     }
   });
