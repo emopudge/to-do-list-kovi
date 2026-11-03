@@ -1,3 +1,47 @@
+const QUADRANTS = {
+  q1: {
+    label: "🔥",
+    title: "🔥 Горит",
+    desc: "срочно и важно",
+    ex: "сдать лабу, оплатить налоги",
+  },
+  q2: {
+    label: "🌱",
+    title: "🌱 Растёт",
+    desc: "важно, но не срочно",
+    ex: "позвонить маме, спорт",
+  },
+  q3: {
+    label: "📞",
+    title: "📞 Суета",
+    desc: "срочно, но неважно",
+    ex: "ответить в чате, быт",
+  },
+  q4: {
+    label: "🍿",
+    title: "🍿 Пустота",
+    desc: "неважно и несрочно",
+    ex: "тикток, полистать ленту",
+  },
+};
+
+let tasks = [];
+let currentView = "list";
+let currentDateFilter = "";
+let editingTaskId = null;
+const q2Reminders = [
+  "полить цветы — 2 минуты, а сколько радости!",
+  "покормить питомца или просто погладить его.",
+  "написать родителям или близким — просто так, без повода.",
+  "размяться 5 минут? спина скажет спасибо.",
+  "выпить стакан воды и сделать глубокий вдох.",
+  "почитать книгу вместо бесконечной ленты?",
+  "записаться на профилактический осмотр к врачу.",
+  "выучить 5 новых слов на иностранном языке.",
+];
+
+let lastReminderIndex = -1;
+
 function createHeader() {
   const header = document.createElement("header");
   header.className = "header";
@@ -17,7 +61,6 @@ function createHeader() {
 
   titleBlock.append(title, subtitle);
 
-  // легенда про матрицу кови
   const legend = document.createElement("div");
   legend.className = "header__legend";
 
@@ -56,17 +99,10 @@ function updateStats() {
     if (!t.done) counts[t.quadrant]++;
   });
 
-  const quadrants = [
-    { id: "q1", label: "🔥" },
-    { id: "q2", label: "🌱" },
-    { id: "q3", label: "📞" },
-    { id: "q4", label: "🍿" },
-  ];
-
-  quadrants.forEach(function (q) {
+  Object.keys(QUADRANTS).forEach(function (q) {
     const badge = document.createElement("span");
-    badge.className = `header__stat-badge header__stat-badge--${q.id}`;
-    badge.textContent = `${q.label} ${counts[q.id]}`;
+    badge.className = `header__stat-badge header__stat-badge--${q}`;
+    badge.textContent = `${QUADRANTS[q].label} ${counts[q]}`;
     statsContainer.appendChild(badge);
   });
 }
@@ -82,7 +118,7 @@ function createMatrixLegend() {
 
   const grid = document.createElement("div");
   grid.className = "matrix-legend__grid";
-  grid.style.display = "none"; // по умолчанию скрыта
+  grid.style.display = "none";
 
   // логика раскрытия
   toggleBtn.addEventListener("click", function () {
@@ -93,32 +129,7 @@ function createMatrixLegend() {
       : "как это работает? (нажми)";
   });
 
-  const items = [
-    {
-      q: "q1",
-      title: "🔥 Горит",
-      desc: "срочно и важно",
-      ex: "сдать лабу, оплатить налоги",
-    },
-    {
-      q: "q2",
-      title: "🌱 Растёт",
-      desc: "важно, но не срочно",
-      ex: "позвонить маме, спорт",
-    },
-    {
-      q: "q3",
-      title: "📞 Суета",
-      desc: "срочно, но неважно",
-      ex: "ответить в чате, быт",
-    },
-    {
-      q: "q4",
-      title: "🍿 Пустота",
-      desc: "неважно и несрочно",
-      ex: "тикток, полистать ленту",
-    },
-  ];
+  const items = Object.entries(QUADRANTS).map(([q, info]) => ({ q, ...info }));
 
   items.forEach(function (item) {
     const block = document.createElement("div");
@@ -267,12 +278,6 @@ function createControls() {
   viewToggle.textContent = "вид: список";
   viewToggle.title = "переключить на матрицу";
 
-  const importBtn = document.createElement("button");
-  importBtn.type = "button";
-  importBtn.id = "import-btn";
-  importBtn.className = "controls__toggle";
-  importBtn.textContent = "умный импорт";
-
   controls.append(search, dateFilter, filter, sort, viewToggle);
   return controls;
 }
@@ -290,37 +295,12 @@ function createMatrixBoard() {
   board.id = "matrix-board";
   board.style.display = "none";
 
-  const quadrantsInfo = {
-    q1: {
-      title: "🔥 Горит",
-      desc: "срочно и важно",
-      ex: "сдать лабу, оплатить налоги",
-    },
-    q2: {
-      title: "🌱 Растёт",
-      desc: "важно, но не срочно",
-      ex: "позвонить маме, спорт",
-    },
-    q3: {
-      title: "📞 Суета",
-      desc: "срочно, но неважно",
-      ex: "ответить в чате, быт",
-    },
-    q4: {
-      title: "🍿 Пустота",
-      desc: "неважно и несрочно",
-      ex: "тикток, полистать ленту",
-    },
-  };
-
   const quadrants = ["q1", "q2", "q3", "q4"];
 
-  quadrants.forEach(function (q) {
+  Object.entries(QUADRANTS).forEach(function ([q, info]) {
     const col = document.createElement("div");
     col.className = `matrix-col matrix-col--${q}`;
     col.dataset.quadrant = q;
-
-    const info = quadrantsInfo[q];
 
     const header = document.createElement("div");
     header.className = "matrix-col__header";
@@ -352,15 +332,15 @@ function createToastContainer() {
   return container;
 }
 
-let tasks = [];
-let currentView = "list"; // 'list' или 'matrix'
-let currentDateFilter = "";
-let editingTaskId = null;
-
 function loadTasks() {
   const saved = localStorage.getItem("kovi-tasks");
   if (saved) {
-    tasks = JSON.parse(saved);
+    try {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed)) tasks = parsed;
+    } catch (e) {
+      console.warn("не удалось загрузить задачи из localStorage", e);
+    }
   }
 }
 
@@ -368,24 +348,13 @@ function saveTasks() {
   localStorage.setItem("kovi-tasks", JSON.stringify(tasks));
 }
 
-const q2Reminders = [
-  "полить цветы — 2 минуты, а сколько радости!",
-  "покормить питомца или просто погладить его.",
-  "написать родителям или близким — просто так, без повода.",
-  "размяться 5 минут? спина скажет спасибо.",
-  "выпить стакан воды и сделать глубокий вдох.",
-  "почитать книгу вместо бесконечной ленты?",
-  "записаться на профилактический осмотр к врачу.",
-  "выучить 5 новых слов на иностранном языке.",
-];
-let reminderIndex = 0;
-
 function showToast(text) {
   const container = document.getElementById("toasts");
+  if (!container) return;
 
   // удаляем старый тост, чтобы не копились
-  if (container.firstChild) {
-    container.firstChild.remove();
+  while (container.firstChild) {
+    container.removeChild(container.firstChild);
   }
 
   const toast = document.createElement("div");
@@ -401,14 +370,16 @@ function showToast(text) {
   closeBtn.setAttribute("aria-label", "закрыть напоминание");
 
   closeBtn.addEventListener("click", function () {
+    clearTimeout(timeoutId);
     toast.remove();
   });
 
   toast.append(msg, closeBtn);
   container.appendChild(toast);
+  const timeoutId = setTimeout(function () {
+    toast.remove();
+  }, 5000); // 5000 мс = 5 секунд
 }
-
-let lastReminderIndex = -1;
 
 function getRandomReminder() {
   let randomIndex = Math.floor(Math.random() * q2Reminders.length);
@@ -428,7 +399,7 @@ function startReminders() {
     showToast(getRandomReminder());
   }, 10000);
 
-  // дальше показываем каждые 3 минуты (180000 миллисекунд)
+  // дальше показываем каждые 3 минуты
   setInterval(function () {
     showToast(getRandomReminder());
   }, 180000);
@@ -468,13 +439,8 @@ function createTaskCard(task) {
   const badge = document.createElement("span");
   badge.className = "task-card__badge";
 
-  const quadrantNames = {
-    q1: "🔥 Горит",
-    q2: "🌱 Растёт",
-    q3: "📞 Суета",
-    q4: "🍿 Пустота",
-  };
-  badge.textContent = quadrantNames[task.quadrant];
+  const qInfo = QUADRANTS[task.quadrant];
+  badge.textContent = qInfo ? qInfo.title : "без квадранта";
 
   const actions = document.createElement("div");
   actions.className = "task-card__actions";
