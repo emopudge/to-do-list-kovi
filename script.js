@@ -823,7 +823,6 @@ function init() {
     .getElementById("task-form")
     .addEventListener("submit", handleFormSubmit);
 
-  // обработчики фильтров
   document.getElementById("search").addEventListener("input", renderTasks);
   document.getElementById("filter").addEventListener("change", renderTasks);
   document.getElementById("sort").addEventListener("change", renderTasks);
@@ -831,7 +830,6 @@ function init() {
     .getElementById("date-filter")
     .addEventListener("change", renderTasks);
 
-  // переключение вида
   document
     .getElementById("view-toggle")
     .addEventListener("click", function (event) {
@@ -841,13 +839,28 @@ function init() {
       renderTasks();
     });
 
-  // делегирование кликов
   document
     .getElementById("task-list")
     .addEventListener("click", handleTaskClick);
   document
     .getElementById("matrix-board")
     .addEventListener("click", handleTaskClick);
+
+  const modal = document.getElementById("import-modal");
+  const importBtn = document.getElementById("import-btn");
+  const cancelBtn = modal.querySelector(".modal__btn--cancel");
+  const submitBtn = modal.querySelector(".modal__btn--submit");
+  const textarea = document.getElementById("import-textarea");
+
+  importBtn.addEventListener("click", function () {
+    modal.style.display = "flex";
+    textarea.focus();
+  });
+
+  cancelBtn.addEventListener("click", function () {
+    modal.style.display = "none";
+    textarea.value = "";
+  });
 
   function initDragAndDrop() {
     let draggedTaskId = null;
@@ -932,36 +945,25 @@ function init() {
 
     taskList.addEventListener("drop", function (e) {
       e.preventDefault();
-      // получаем новые ID в том порядке, в котором они сейчас в DOM
       const cards = Array.from(taskList.querySelectorAll(".task-card"));
       const newIds = cards.map((c) => c.dataset.id);
 
-      // пересортировываем массив tasks согласно новому порядку
-      tasks.sort((a, b) => newIds.indexOf(a.id) - newIds.indexOf(b.id));
+      const orderMap = {};
+      newIds.forEach((id, i) => {
+        orderMap[id] = i;
+      });
+
+      tasks.sort((a, b) => {
+        const idxA = orderMap[a.id] !== undefined ? orderMap[a.id] : 9999;
+        const idxB = orderMap[b.id] !== undefined ? orderMap[b.id] : 9999;
+        return idxA - idxB;
+      });
       saveTasks();
 
-      // принудительно ставим сортировку "вручную", чтобы не сбить порядок
       document.getElementById("sort").value = "custom";
       renderTasks();
     });
 
-    const modal = document.getElementById("import-modal");
-    const importBtn = document.getElementById("import-btn");
-    const cancelBtn = modal.querySelector(".modal__btn--cancel");
-    const submitBtn = modal.querySelector(".modal__btn--submit");
-    const textarea = document.getElementById("import-textarea");
-
-    importBtn.addEventListener("click", function () {
-      modal.style.display = "flex";
-      textarea.focus();
-    });
-
-    cancelBtn.addEventListener("click", function () {
-      modal.style.display = "none";
-      textarea.value = "";
-    });
-
-    // закрытие по клику на темный фон
     modal.addEventListener("click", function (e) {
       if (e.target === modal) {
         modal.style.display = "none";
@@ -980,10 +982,9 @@ function init() {
         const quadrant = guessQuadrant(title);
 
         const newTask = {
-          id:
-            Date.now().toString() + Math.random().toString(36).substring(2, 5),
+          id: crypto.randomUUID(),
           title: title,
-          date: new Date().toISOString().split("T")[0],
+          date: new Date().toLocaleDateString("en-CA"),
           quadrant: quadrant,
           done: false,
         };
@@ -999,7 +1000,6 @@ function init() {
     });
   }
 
-  // логика модалки редактирования
   const editModal = document.getElementById("edit-modal");
   const editForm = document.getElementById("edit-form");
   const editCancelBtn = editModal.querySelector(".modal__btn--cancel");
