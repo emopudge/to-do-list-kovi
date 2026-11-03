@@ -459,12 +459,14 @@ function createTaskCard(task) {
   checkboxWrapper.appendChild(doneBtn);
 
   const editBtn = document.createElement("button");
+  editBtn.type = "button";
   editBtn.className = "task-card__btn task-card__btn--edit has-tooltip";
   editBtn.textContent = "✏️";
   editBtn.setAttribute("aria-label", "редактировать");
   editBtn.dataset.tooltip = "редактировать";
 
   const deleteBtn = document.createElement("button");
+  deleteBtn.type = "button";
   deleteBtn.className = "task-card__btn task-card__btn--delete has-tooltip";
   deleteBtn.textContent = "✕";
   deleteBtn.setAttribute("aria-label", "удалить");
@@ -658,6 +660,8 @@ function guessQuadrant(title) {
     "встреч",
     "забер",
     "отнес",
+    "лит",
+    "корм",
   ];
 
   if (q1Roots.some((root) => text.includes(root))) return "q1";
@@ -692,9 +696,9 @@ function handleTaskClick(event) {
 
   if (event.target.closest(".task-card__checkbox-wrapper")) {
     toggleTask(id);
-  } else if (event.target.closest("task-card__btn--delete")) {
+  } else if (event.target.closest(".task-card__btn--delete")) {
     deleteTask(id);
-  } else if (event.target.closest("task-card__btn--edit")) {
+  } else if (event.target.closest(".task-card__btn--edit")) {
     editTask(id);
   }
 }
@@ -862,6 +866,41 @@ function init() {
     textarea.value = "";
   });
 
+  modal.addEventListener("click", function (e) {
+    if (e.target === modal) {
+      modal.style.display = "none";
+      textarea.value = "";
+    }
+  });
+
+  submitBtn.addEventListener("click", function () {
+    const text = textarea.value;
+    if (!text.trim()) return;
+
+    const lines = text.split("\n").filter((line) => line.trim() !== "");
+
+    lines.forEach(function (line) {
+      const title = line.trim();
+      const quadrant = guessQuadrant(title);
+
+      const newTask = {
+        id: crypto.randomUUID(),
+        title: title,
+        date: new Date().toLocaleDateString("en-CA"),
+        quadrant: quadrant,
+        done: false,
+      };
+
+      tasks.push(newTask);
+    });
+
+    saveTasks();
+    renderTasks();
+
+    modal.style.display = "none";
+    textarea.value = "";
+  });
+
   function initDragAndDrop() {
     let draggedTaskId = null;
 
@@ -962,41 +1001,6 @@ function init() {
 
       document.getElementById("sort").value = "custom";
       renderTasks();
-    });
-
-    modal.addEventListener("click", function (e) {
-      if (e.target === modal) {
-        modal.style.display = "none";
-        textarea.value = "";
-      }
-    });
-
-    submitBtn.addEventListener("click", function () {
-      const text = textarea.value;
-      if (!text.trim()) return;
-
-      const lines = text.split("\n").filter((line) => line.trim() !== "");
-
-      lines.forEach(function (line) {
-        const title = line.trim();
-        const quadrant = guessQuadrant(title);
-
-        const newTask = {
-          id: crypto.randomUUID(),
-          title: title,
-          date: new Date().toLocaleDateString("en-CA"),
-          quadrant: quadrant,
-          done: false,
-        };
-
-        tasks.push(newTask);
-      });
-
-      saveTasks();
-      renderTasks();
-
-      modal.style.display = "none";
-      textarea.value = "";
     });
   }
 
