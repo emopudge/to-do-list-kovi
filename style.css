@@ -148,7 +148,6 @@ body {
   background: #4a4640; 
 }
 
-
 .controls {
   display: flex;
   flex-wrap: wrap;
@@ -159,9 +158,7 @@ body {
   padding: 12px;
   border-radius: var(--radius);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-  grid-template-columns: 1fr 140px 120px 120px 140px;
   margin-top: 8px;
-  opacity: 0.8;
 }
 
 .controls > * {
@@ -171,11 +168,9 @@ body {
 .controls__date,
 .controls__select {
   background: var(--input-bg);
-  border: 1px solid #ccc;
-  color: #333;
+  border: var(--border);
+  color: var(--text);
 }
-
-
 
 .task-list {
   display: flex;
@@ -194,8 +189,7 @@ body {
   max-width: 320px;
   z-index: 10;
   pointer-events: none;
-  width: 20%;
-  max-width: 720px;
+  width: 100%;
 }
 
 .toasts > * {
@@ -239,7 +233,7 @@ body {
 .task-card__actions {
   display: flex;
   align-items: center;
-  gap: 25px;
+  gap: 12px;
 }
 
 .task-card__checkbox {
@@ -299,7 +293,6 @@ body::before {
   pointer-events: none;
 }
 
-
 .task-card {
   position: relative;
   display: flex;
@@ -355,49 +348,12 @@ body::before {
   border-radius: 4px;
 }
 
-.task-card__footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 8px;
-}
-
-.task-card__actions {
-  display: flex;
-  align-items: center;
-  gap: 25px;
-}
-
-.task-card__checkbox {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: var(--q2); /* цвет галочки */
-}
-
-.task-card__btn:hover {
-  background: var(--input-bg);
-  border-color: #e0dbd0;
-  color: var(--text);
-}
-
 .task-card__btn--delete:hover {
   color: var(--q1);
   border-color: var(--q1);
 }
 
-.task-card--done .task-card__title {
-  text-decoration: line-through;
-  color: var(--text-muted);
-}
-
-.task-card--done .task-card__badge {
-  background: #ccc;
-}
-
-.controls__date,
 .controls__toggle {
-  margin-left: auto;
   flex: 0 0 auto;
   font-family: inherit;
   font-size: 14px;
@@ -451,7 +407,7 @@ body::before {
 /* компактные карточки для матрицы */
 .task-card--compact {
   padding: 10px;
-  border-left: 4px solid var(--q-color) !important;
+  border-left: 4px solid var(--q-color);
 }
 
 .task-card--compact .task-card__title {
@@ -495,7 +451,7 @@ body::before {
 .matrix-legend__desc {
   font-size: 12px;
   font-weight: 600;
-  color: var(--text-main);
+  color: var(--text);
   margin-top: 2px;
 }
 
@@ -528,7 +484,7 @@ body::before {
 .matrix-col__title {
   font-family: var(--font-hand);
   font-size: 24px;
-  color: var(--text-main);
+  color: var(--text);
   line-height: 1.2;
 }
 
@@ -574,7 +530,7 @@ body::before {
 
 .task-card--q3:hover,
 .task-card--q4:hover {
-  opacity: 1; /* при наведении становятся яркими */
+  opacity: 1; 
 }
 
 /* важные задачи выделяем тенью посильнее */
@@ -590,9 +546,9 @@ body::before {
 }
 
 .matrix-col.drag-over {
-  background: rgba(232, 93, 93, 0.1) !important; /* подсветка при наведении */
-  border-color: var(--q1) !important;
-  border-style: solid !important;
+  background: rgba(232, 93, 93, 0.1); 
+  border-color: var(--q1);
+  border-style: solid;
 }
 
 .task-card:active {
@@ -623,7 +579,7 @@ body::before {
   padding: 20px 24px;
   border-radius: var(--radius);
   box-shadow: 0 4px 20px rgba(45, 42, 38, 0.08);
-  border-top: 4px solid var(--text-main);
+  border-top: 4px solid var(--text);
   margin-bottom: 8px;
 }
 
@@ -632,7 +588,7 @@ body::before {
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 16px;
-  color: var(--text-main);
+  color: var(--text);
 }
 
 .add-section__import-btn {
@@ -663,7 +619,7 @@ body::before {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px); /* эффект стекла */
+  backdrop-filter: blur(4px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -685,7 +641,7 @@ body::before {
   font-size: 32px;
   line-height: 1;
   margin-bottom: 8px;
-  color: var(--text-main);
+  color: var(--text);
 }
 
 .modal__hint {
@@ -705,7 +661,7 @@ body::before {
   resize: vertical;
   background: var(--bg-paper);
   margin-bottom: 16px;
-  color: var(--text-main); 
+  color: var(--text); 
 }
 
 .modal__actions {
@@ -729,7 +685,7 @@ body::before {
 
 .modal__btn--cancel {
   background: transparent;
-    color: #5a554d;
+  color: #5a554d;
   font-weight: 500;
 }
 
@@ -769,8 +725,7 @@ body::before {
 /* Само облачко с текстом */
 .has-tooltip::after {
   content: attr(data-tooltip);
-  background: #333; /* Жесткий фон, чтобы текст не сливался */
-  background: var(--text-main, #333); /* Используем переменную, но если ее нет — будет темно-серый */
+  background: var(--text); 
   color: var(--input-bg);
   font-size: 11px;
   font-weight: 500;
@@ -788,8 +743,7 @@ body::before {
   height: 0;
   border-width: 5px;
   border-style: solid;
-  border-color: #333 transparent transparent transparent;
-  border-top-color: var(--text-main, #333);
+  border-color: var(--text) transparent transparent transparent;
   margin-bottom: 2px; /* Прижимаем стрелку к облачку */
 }
 
@@ -836,7 +790,7 @@ body::before {
   font-family: inherit;
   font-size: 15px;
   padding: 10px 14px;
-  color: var(--text-main);
+  color: var(--text);
   border: 1px solid #d5cec1;
   border-radius: var(--radius);
   background: var(--bg-paper);
@@ -857,7 +811,7 @@ body::before {
   border-radius: 20px;
   background: var(--input-bg);
   border: 1px solid #e0dbd0;
-  color: var(--text-main);
+  color: var(--text);
 }
 .header__stat-badge--q1 { color: var(--q1); border-color: rgba(232, 93, 93, 0.3); }
 .header__stat-badge--q2 { color: var(--q2); border-color: rgba(93, 176, 117, 0.3); }
@@ -898,7 +852,7 @@ body::before {
 .toast__text {
   font-size: 14px;
   line-height: 1.4;
-  color: var(--text-main);
+  color: var(--text);
 }
 
 .toast__close {
@@ -926,11 +880,6 @@ body::before {
   .task-form__quadrant,
   .task-form__submit {
     flex: 1 1 100%;
-  }
-
-  .task-form,
-  .controls {
-    grid-template-columns: 1fr;
   }
 
   .header__title {
@@ -963,9 +912,6 @@ body::before {
 }
 
 @media (max-width: 800px) {
-  .controls {
-    grid-template-columns: 1fr 1fr;
-  }
   .matrix-board {
     grid-template-columns: 1fr;
   }
