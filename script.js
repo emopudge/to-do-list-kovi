@@ -1,33 +1,5 @@
-const QUADRANTS = {
-  q1: {
-    label: "🔥",
-    title: "🔥 Горит",
-    desc: "срочно и важно",
-    ex: "сдать лабу, оплатить налоги",
-  },
-  q2: {
-    label: "🌱",
-    title: "🌱 Растёт",
-    desc: "важно, но не срочно",
-    ex: "позвонить маме, спорт",
-  },
-  q3: {
-    label: "📞",
-    title: "📞 Суета",
-    desc: "срочно, но неважно",
-    ex: "ответить в чате, быт",
-  },
-  q4: {
-    label: "🍿",
-    title: "🍿 Пустота",
-    desc: "неважно и несрочно",
-    ex: "тикток, полистать ленту",
-  },
-};
-
 let tasks = [];
 let currentView = "list";
-let currentDateFilter = "";
 let editingTaskId = null;
 const q2Reminders = [
   "полить цветы — 2 минуты, а сколько радости!",
@@ -294,8 +266,6 @@ function createMatrixBoard() {
   board.className = "matrix-board";
   board.id = "matrix-board";
   board.style.display = "none";
-
-  const quadrants = ["q1", "q2", "q3", "q4"];
 
   Object.entries(QUADRANTS).forEach(function ([q, info]) {
     const col = document.createElement("div");
